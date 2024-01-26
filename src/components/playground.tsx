@@ -20,9 +20,16 @@ def fib(n):
         console.log(code);
     }
 
-    function runCode() {
+    async function runCode() {
         // sends code to backend, then runs visualizer
         console.log("sending code", code);
+        const response = await fetch("http://127.0.0.1:5000/api", {
+            method: "POST",
+            body: code
+        })
+        if (!response.ok) return;
+        const text = response.text();
+        console.log(text);
     }
 
     return (
