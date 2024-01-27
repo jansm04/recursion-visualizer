@@ -5,12 +5,14 @@ import { useState } from 'react';
 const Playground = () => {
 
     const defaultCode = 
-`// fibonacci sequence
+`
+# fibonacci sequence
 def fib(n):
-    if (n == 1 || n == 2):
+    if (n == 1 or n == 2):
         return 1
     else:
-        return fib(n-1) + fib(n-2)`
+        return fib(n-1) + fib(n-2)
+`
         
     const [code, setCode] = useState<string>(defaultCode);
 
@@ -23,13 +25,16 @@ def fib(n):
     async function runCode() {
         // sends code to backend, then runs visualizer
         console.log("sending code", code);
-        const response = await fetch("http://127.0.0.1:5000/api", {
+        var response = await fetch("http://127.0.0.1:5000/api", {
             method: "POST",
             body: code
         })
-        if (!response.ok) return;
-        const text = response.text();
-        console.log(text);
+        if (response.ok) {
+            var text = await response.text();
+            console.log(text);
+        } else {
+            console.log('An error occurred executing the code.');
+        }
     }
 
     return (
