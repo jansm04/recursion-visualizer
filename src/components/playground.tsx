@@ -5,14 +5,11 @@ import { useState } from 'react';
 const Playground = () => {
 
     const defaultCode = 
-`
-# fibonacci sequence
-def fib(n):
-    if (n == 1 or n == 2):
+`def fun(n): # do NOT change this line
+    if (n == 0 or n == 1):
         return 1
     else:
-        return fib(n-1) + fib(n-2)
-`
+        return fun(n - 1) + fun(n - 2)`
         
     const [code, setCode] = useState<string>(defaultCode);
 

@@ -1,3 +1,5 @@
+import extract as ex
+
 
 # "map = {}\\n"
 # maps parameter to node
@@ -8,12 +10,12 @@
 map = "qTY8eDfs9 = {}\\n"
 
 
-# t = """\\n# fibonacci sequence\\ndef fun(num):\\n    if (n == 0 or n == 1):\\n        return 1\\n    else:\\n        return fun(n-1) + fun(n-2)\\nprint("Result: " + str(fun(4)))"""
+# t = """\\n# fibonacci sequence\\ndef fun(num):\\n    if (n == 0 or n == 1):\\n        return 1\\n    else:\\n        return fun(n-1) + fun(n-2)\\n"""
 
 
-def insert_lines(code, rv, tab, start, end):
+def insert_lines(code, rv, tab, start, end, params):
     var_line = tab + "jB2h3dCi1 = " + rv + "\\n"
-    map_line = tab + "qTY8eDfs9[n] = (jB2h3dCi1, True, [])\\n"
+    map_line = tab + "qTY8eDfs9[n] = (jB2h3dCi1, True, [" + params + "])\\n"
     return_line = tab + "return " + "jB2h3dCi1"
 
     start = code[:start]
@@ -43,7 +45,7 @@ def find_returns(code):
 #   a = <return_value>
 #   map[n] = (a, [<p1>, ... ,<pn>])
 #   return a
-def edit_returns(code, indices):
+def edit_returns(code, indices, params):
     for i in range(len(indices)):
         idx = indices[i]
         tab = ""
@@ -54,12 +56,10 @@ def edit_returns(code, indices):
         
         rv = ""
         k = idx+7
-        print(len(tab))
         while k+2 < len(code) and code[k:k+2] != "\\n":
             rv += code[k]
             k += 1
-        print(rv)
-        c = insert_lines(code, rv, tab, j, k);
+        c = insert_lines(code, rv, tab, j, k, params);
         code, s = c[0], c[1]
 
         for l in range(len(indices)):
@@ -71,7 +71,8 @@ def edit_returns(code, indices):
 
 def setup(code):
     indices = find_returns(code)
-    code = edit_returns(code, indices)
+    params = ex.extract(code)
+    code = edit_returns(code, indices, params)
     code = map + code
     return code
 

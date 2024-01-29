@@ -11,12 +11,13 @@ def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
 
     querystring = {"fields":"*"}
-    xtra = """print("Result: " + str(fun(4)))"""
+    call = """fun(4)\\n"""
+    xtra = """print(qTY8eDfs9)"""
     
     code = pc.parseCode(code)
     print(code)
     code = sp.setup(code)
-    code = code + xtra
+    code = code + call + xtra
     code = code.replace("\\n", "\n")
     print(code)
     payload = {
