@@ -9,25 +9,35 @@ import extract as ex
 #   children = list of child parameters
 map = "qTY8eDfs9 = {}\\n"
 
+# print(map)
+printMapLine = """print(qTY8eDfs9)"""
 
-# t = """\\n# fibonacci sequence\\ndef fun(num):\\n    if (n == 0 or n == 1):\\n        return 1\\n    else:\\n        return fun(n-1) + fun(n-2)\\n"""
 
-
-def insert_lines(code, rv, tab, start, end, params):
-    var_line = tab + "jB2h3dCi1 = " + rv + "\\n"
-    map_line = tab + "qTY8eDfs9[n] = (jB2h3dCi1, True, [" + params + "])\\n"
-    return_line = tab + "return " + "jB2h3dCi1"
+# replace
+#  return <return_value>
+# with
+#   a = <return_value>
+#   map[n] = (a, [<p1>, ... ,<pn>])
+#   return a
+def insert_lines(code, rv, tab, start, end, recursiveArgs):
+    tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
+    mapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, [" + recursiveArgs + "])\\n"
+    returnLine = tab + "return " + "jB2h3dCi1"
 
     start = code[:start]
     end = code[end:]
-    code = start + var_line + map_line + return_line + end
+    code = start + tempVarLine + mapLine + returnLine + end
+
+    # add 7 to count 'return' keyword itself and space
+    originalReturnLen = len(tab) + 7 + len(rv)
 
     # number of characters inserted
-    s = len(var_line) + len(map_line) + len(return_line) - 7 - len(rv) - len(tab)
-
+    s = len(tempVarLine) + len(mapLine) + len(returnLine) - originalReturnLen
     return (code, s)
 
 
+# find all return statements in recursive function 
+# and return their places in the code
 def find_returns(code):
     keyword = "return "
     n = len(keyword)
@@ -39,13 +49,10 @@ def find_returns(code):
         i += 1
     return indices
 
-# edit every return statement so we replace
-#   return <return_value>
-# with
-#   a = <return_value>
-#   map[n] = (a, [<p1>, ... ,<pn>])
-#   return a
-def edit_returns(code, indices, params):
+# go through recursive function and edit every return 
+# statement so we store the return value in a map 
+# before we return the value
+def edit_returns(code, indices, recursiveArgs):
     for i in range(len(indices)):
         idx = indices[i]
         tab = ""
@@ -59,9 +66,9 @@ def edit_returns(code, indices, params):
         while k+2 < len(code) and code[k:k+2] != "\\n":
             rv += code[k]
             k += 1
-        c = insert_lines(code, rv, tab, j, k, params);
+        # replace return statement with map lines
+        c = insert_lines(code, rv, tab, j, k, recursiveArgs);
         code, s = c[0], c[1]
-
         for l in range(len(indices)):
             if (l > i):
                 indices[l] += s
@@ -71,8 +78,8 @@ def edit_returns(code, indices, params):
 
 def setup(code):
     indices = find_returns(code)
-    params = ex.extract(code)
-    code = edit_returns(code, indices, params)
+    recursiveArgs = ex.extract(code)
+    code = edit_returns(code, indices, recursiveArgs)
     code = map + code
     return code
 

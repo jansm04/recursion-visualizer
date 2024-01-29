@@ -1,4 +1,3 @@
-
 def parseCode(code):
     # trim 'b' in the beginning and "'" wrapping the string
     code = code[2:]
