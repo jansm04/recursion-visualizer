@@ -10,7 +10,7 @@ import extract as ex
 map = "qTY8eDfs9 = {}\\n"
 
 # print(map)
-printMapLine = """print(qTY8eDfs9)"""
+printMapLine = "print(qTY8eDfs9)"
 
 
 # replace

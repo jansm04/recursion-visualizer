@@ -25,7 +25,7 @@ def extract_recursive_args(code, fnName):
     while i < len(code) and code[i] != ":":
         i += 1
     i += 1
-    while i+len(fnName) < len(code):
+    while i+len(fnName) < len(code) and i+6 < len(code):
         if code[i:i+2] == "\\n" and code[i:i+6] != insideFnIndicator:
             break
         if code[i:i+len(fnName)] == fnName:
