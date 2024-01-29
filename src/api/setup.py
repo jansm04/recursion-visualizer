@@ -8,7 +8,7 @@
 map = "qTY8eDfs9 = {}\\n"
 
 
-t = """\\n# fibonacci sequence\\ndef fun(num):\\n    if (n == 0 or n == 1):\\n        return 1\\n    else:\\n        return fun(n-1) + fun(n-2)\\nprint("Result: " + str(fun(4)))"""
+# t = """\\n# fibonacci sequence\\ndef fun(num):\\n    if (n == 0 or n == 1):\\n        return 1\\n    else:\\n        return fun(n-1) + fun(n-2)\\nprint("Result: " + str(fun(4)))"""
 
 
 def insert_lines(code, rv, tab, start, end):
@@ -73,6 +73,6 @@ def setup(code):
     indices = find_returns(code)
     code = edit_returns(code, indices)
     code = map + code
-    print(code)
+    return code
 
-setup(t)
+# setup(t)

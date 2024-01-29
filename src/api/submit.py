@@ -2,6 +2,8 @@ import config
 import requests
 import json
 import time
+import parse as pc
+import setup as sp
 
 key = config.API_KEY
 
@@ -9,14 +11,17 @@ def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
 
     querystring = {"fields":"*"}
-    xtra = """print("Result: " + str(fib(4)))"""
-
-    inputCode = code[2:len(code)-1] + xtra
-    parsedCode = inputCode.replace("\\\\n", "\\n")
-    print(parsedCode)
+    xtra = """print("Result: " + str(fun(4)))"""
+    
+    code = pc.parseCode(code)
+    print(code)
+    code = sp.setup(code)
+    code = code + xtra
+    code = code.replace("\\n", "\n")
+    print(code)
     payload = {
         "language_id": 71,
-        "source_code": parsedCode
+        "source_code": code
     }
     headers = {
         "content-type": "application/json",
