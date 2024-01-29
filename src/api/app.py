@@ -9,8 +9,8 @@ CORS(app)
 @app.route('/api', methods=['POST'])
 def transform():
     body = str(request.data)
-    sb.submit(body)
-    return "Submission Successful!"
+    result = sb.submit(body)
+    return result
 
 if __name__ == '__main__':
     app.run(port=5000)

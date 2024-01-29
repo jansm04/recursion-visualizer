@@ -6,7 +6,7 @@ import extract as ex
 # a node is defined as (rv, children)
 # where 
 #   rv = return value
-#   children = list of child parameters
+#   children = list of child arguments
 map = "qTY8eDfs9 = {}\\n"
 
 # print(map)
@@ -14,10 +14,10 @@ printMapLine = "print(qTY8eDfs9)"
 
 
 # replace
-#  return <return_value>
+#   return <return_value>
 # with
 #   a = <return_value>
-#   map[n] = (a, [<p1>, ... ,<pn>])
+#   map[n] = (a, [<arg1>, ... ,<argn>])
 #   return a
 def insert_lines(code, rv, tab, start, end, recursiveArgs):
     tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
@@ -82,5 +82,3 @@ def setup(code):
     code = edit_returns(code, indices, recursiveArgs)
     code = map + code
     return code
-
-# setup(t)
