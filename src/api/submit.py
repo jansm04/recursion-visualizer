@@ -9,11 +9,9 @@ key = config.API_KEY
 
 def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
-
     querystring = {"fields":"*"}
-    xtra = """print(qTY8eDfs9)"""
     
-    code = sp.setup(pc.parseCode(code)) + xtra
+    code = sp.setup(pc.parseCode(code))
     code = code.replace("\\n", "\n")
     print(code)
     try:
