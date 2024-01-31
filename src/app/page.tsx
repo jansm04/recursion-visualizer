@@ -1,7 +1,7 @@
-import Playground from "../components/playground"
+import Main from "../components/main"
 
 export default function Home() {
   return (
-    <Playground />
+    <Main />
   );
 }
