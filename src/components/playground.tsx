@@ -1,6 +1,7 @@
 'use client'
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 import { useState } from 'react';
+import toMap from '../tools/map_handler';
 
 const Playground = () => {
 
@@ -28,7 +29,10 @@ const Playground = () => {
         })
         if (response.ok) {
             var text = await response.text();
-            console.log(text);
+            var map: Map<number, any[]> = toMap(text);
+            map.forEach((value, key) => {
+                console.log(key, value);
+            });
         } else {
             console.log('An error occurred executing the code.');
         }
