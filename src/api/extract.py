@@ -45,7 +45,26 @@ def extract_recursive_args(code, fnName):
     return recursiveArgs
 
 
+# go through code and extract the arg passed
+# to the intial function call
+def extract_initial_arg(code, fnName):
+    initialArg, keyword = "", "\\n" + fnName
+    n = len(keyword)
+    i = 0
+    while i+n < len(code) and code[i:i+n] != keyword:
+        i += 1
+    i += n
+    while code[i] != '(':
+        i += 1
+    i += 1
+    while code[i] != ')':
+        initialArg += code[i]
+        i += 1
+    return initialArg
+
+
 def extract(code):
     fnName = extract_fn_name(code)
     recursiveArgs = extract_recursive_args(code, fnName)
-    return recursiveArgs
+    initialArg = extract_initial_arg(code, fnName)
+    return (recursiveArgs, initialArg)

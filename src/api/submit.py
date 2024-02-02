@@ -11,7 +11,8 @@ def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
     querystring = {"fields":"*"}
     
-    code = sp.setup(pc.parseCode(code))
+    input = sp.setup(pc.parseCode(code))
+    code, initialArg = input[0], input[1]
     code = code.replace("\\n", "\n")
     print(code)
     try:
@@ -45,7 +46,7 @@ def submit(code):
         responseText = json.loads(response.text)
         outputText = responseText['stdout']
         print(outputText)
-        return outputText
+        return (outputText, initialArg)
     except:
         print("An error occurred while getting the code submission.")
         return False

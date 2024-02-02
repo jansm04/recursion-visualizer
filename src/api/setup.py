@@ -78,7 +78,8 @@ def edit_returns(code, indices, recursiveArgs):
 
 def setup(code):
     indices = find_returns(code)
-    recursiveArgs = ex.extract(code)
+    extracts = ex.extract(code)
+    recursiveArgs, initalArg = extracts[0], extracts[1]
     code = edit_returns(code, indices, recursiveArgs)
     code = map + code + printMapLine
-    return code
+    return (code, initalArg)

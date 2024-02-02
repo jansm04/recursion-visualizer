@@ -32,11 +32,12 @@ fun(5) # make sure you call the function`
             body: code
         })
         if (response.ok) {
-            var text = await response.text();
-            var map: Map<number, any[]> = toMap(text);
+            var json = await response.json();
+            var map: Map<number, any[]> = toMap(json.text);
             map.forEach((value, key) => {
                 console.log(key, value);
             });
+            console.log("Inital Argument", json.arg);
         } else {
             console.log('An error occurred executing the code.');
         }
