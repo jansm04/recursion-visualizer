@@ -1,10 +1,13 @@
-'use client'
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import toMap from '../tools/map_handler';
 import Controls from './controls';
 
-const Playground = () => {
+const Playground = ({
+    runButtonRef
+} : {
+    runButtonRef: RefObject<HTMLButtonElement>
+}) => {
 
     const defaultCode = 
 `# Enter a recursive function to visualize!
@@ -33,6 +36,7 @@ fun(5) # make sure you call the function`
         })
         if (response.ok) {
             var json = await response.json();
+            if (!json.text) return;
             var map: Map<number, any[]> = toMap(json.text);
             map.forEach((value, key) => {
                 console.log(key, value);
@@ -62,7 +66,7 @@ fun(5) # make sure you call the function`
                     overviewRulerLanes: 0
                 }}
             />
-            <Controls onRunCode={onRunCode} />
+            <Controls onRunCode={onRunCode} runButtonRef={runButtonRef} />
         </div>
         
     )
