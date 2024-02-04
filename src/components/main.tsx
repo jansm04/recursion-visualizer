@@ -97,6 +97,11 @@ fun(5) # make sure you call the function`
             node.draw(ctx, strokeStyle);
             edge.draw(ctx, "white");
             await sleep(1000);
+            // check if call returns base case
+            for (let i = 0; i < call.children.length; i++) {
+                var child = map.get(call.children[i]);
+                if (!child) return;
+            }
             for (let i = 0; i < call.children.length; i++) {
                 var child = map.get(call.children[i]);
                 if (child) {
