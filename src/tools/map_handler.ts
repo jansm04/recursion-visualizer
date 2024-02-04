@@ -1,12 +1,14 @@
+import Call from "../interfaces/call";
+
 /** 
  * Transforms the string recieved from the backend to a Map object. 
  * Each entry in the Map represents a function call. The key of each 
  * entry is the argument passed to the function call. The value of 
- * each entry is a tuple consisting of the function call's return 
+ * each entry is a Call object consisting of the function call's return 
  * value and the arguments passed to its recursive function calls.
 */
-export default function toMap(responseText: string): Map<number, any[]> {
-    var map = new Map<number, any[]>();
+export default function toMap(responseText: string): Map<number, Call> {
+    var map = new Map<number, Call>();
     var i = 1;
     while (i < responseText.length && responseText[i] != '}') {
         var keyString = "";
@@ -29,7 +31,10 @@ export default function toMap(responseText: string): Map<number, any[]> {
                 i += 2;
             children.push(childNumber);
         }
-        map.set(keyNumber, [returnNumber, children]);
+        map.set(keyNumber, {
+            rv: returnNumber,
+            children: children
+        });
         i += 4;
     }
     return map;
