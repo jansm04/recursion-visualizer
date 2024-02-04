@@ -1,10 +1,21 @@
-const TreeVisualization = () => {
+import { RefObject } from "react"
+
+const TreeVisualization = ({
+    canvasRef
+} : {
+    canvasRef: RefObject<HTMLCanvasElement>
+}) => {
     return (
-        <canvas  
-            className="w-[100vw] h-fit outline-none bg-[#1e1e1e] select-none"
-            hidden={true}
-        >
-        </canvas>
+        <div className="text-center">
+            <canvas  
+            height={window.innerHeight - window.innerHeight * 0.1}
+            width={window.innerWidth - window.innerWidth * 0.1}
+            ref={canvasRef}
+            className="outline-none bg-[#1e1e1e] select-none"
+            >
+            </canvas> 
+        </div>
+        
     )
 }
 
