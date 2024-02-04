@@ -26,10 +26,38 @@ def fun(n): # NOTE: do NOT change this line
     else:
         return fun(n - 1) + fun(n - 2)
 
-fun(5) # make sure you call the function`    
+fun(5) # make sure you call the function`
+
+    // var testMap = new Map<number, Call>();
+    // testMap.set(0, {
+    //     rv: 1,
+    //     children: [-1, -2]
+    // });
+    // testMap.set(1, {
+    //     rv: 1,
+    //     children: [0, -1]
+    // });
+    // testMap.set(2, {
+    //     rv: 2,
+    //     children: [1, 0]
+    // });
+    // testMap.set(3, {
+    //     rv: 3,
+    //     children: [2, 1]
+    // });
+    // testMap.set(4, {
+    //     rv: 5,
+    //     children: [3, 2]
+    // });
+
+    
         
     const [code, setCode] = useState<string>(defaultCode);
-    var isReady = false;
+    const [loading, setLoading] = useState<boolean>(false);
+    var nodes = new Array<Node>();
+    var edges = new Array<Edge>();
+    var hovered: Node | null = null;
+    var selectedNode: Node | null = null;
 
     function handleCodeChange(code: string | undefined) {
         if (!code) return;
@@ -40,18 +68,22 @@ fun(5) # make sure you call the function`
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    
-
-    function drawTree(map: Map<number, Call>, arg: string) {
-        if (!isReady) return;
-
-        var ctx = canvasRef.current?.getContext("2d");
-        var rect = canvasRef.current?.getBoundingClientRect();
-
+    function resetCtx() {
+        var canvas = canvasRef.current;
+        if (!canvas) return;
+        var ctx = canvas.getContext("2d");
+        var rect = canvas.getBoundingClientRect();
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = "white"
+        return ctx;
+    }
+
+    async function visualizeTree(map: Map<number, Call>, arg: string) {
+        var ctx = resetCtx();
+        if (!ctx) return;
+        ctx.lineWidth = 3;
+        var strokeStyle = "white";
+        canvasRef.current?.removeEventListener('mousemove', onMouseMove);
 
         var front = map.get(Number.parseInt(arg));
         if (!front) return;
@@ -60,26 +92,47 @@ fun(5) # make sure you call the function`
             if (!call || !ctx) return;
             var node = new Node(x, y, arg, call.rv.toString());
             var edge = new Edge(parent, node);
-            node.draw(ctx);
-            edge.draw(ctx);
+            nodes.push(node);
+            edges.push(edge);
+            node.draw(ctx, strokeStyle);
+            edge.draw(ctx, "white");
             await sleep(1000);
             for (let i = 0; i < call.children.length; i++) {
                 var child = map.get(call.children[i]);
                 if (child) {
-                    level++;
-                    var childX = x - (300 / Math.pow(level, 1.5)) + (600 * i / Math.pow(level, 1.5));
+                    level += 0.2;
+                    var childX = x - (200 / Math.pow(level, 4)) + (400 * i / Math.pow(level, 4));
                     var childY = y + 100;
                     await traverseNodes(child, call.children[i].toString(), childX, childY, level, node);
-                    level--;
+                    level -= 0.2;
                 }
             }        
         }
-        traverseNodes(front, arg, window.innerWidth / 2, 60, 0, null);
+        await traverseNodes(front, arg, window.innerWidth / 2, 60, 0.6, null);
+        canvasRef.current?.addEventListener('mousemove', onMouseMove);
+    }
+
+    function drawTree() {
+
+        var ctx = canvasRef.current?.getContext("2d");
+        var rect = canvasRef.current?.getBoundingClientRect();
+
+        if (!ctx || !rect) return;
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        ctx.lineWidth = 3;
+        
+        for (let i = 0; i < edges.length; i++) {
+            edges[i].draw(ctx, "white");
+        }
+        for (let i = 0; i < nodes.length; i++) {
+            var strokestyle = nodes[i] == hovered ? "blue" : "white"
+            nodes[i].draw(ctx, strokestyle);
+        }
     }
 
     async function onRunCode() {
-        // sends code to backend, then runs visualizer
-        isReady = false;
+        setLoading(true);
+        resetCtx();
         var response = await fetch("http://127.0.0.1:5000/api", {
             method: "POST",
             body: code
@@ -88,17 +141,42 @@ fun(5) # make sure you call the function`
             var json = await response.json();
             if (!json.text) return;
             var map = toMap(json.text);
-            map.forEach((value, key) => {
-                console.log(key, value);
-            });
             var arg = json.arg;
-            console.log("Inital Argument", arg);
-            isReady = true;
-            drawTree(map, "6");
+            setLoading(false);
+            visualizeTree(map, arg);
         } else {
+            setLoading(false);
             console.log('An error occurred executing the code.');
         }
     }
+
+    function onMouseMove(e: MouseEvent) {
+        var point = computePointInCanvas(e);
+        if (point) {
+            selectedNode = selectNode(point.x, point.y);
+            if (selectedNode != hovered) {
+                hovered = selectedNode;
+                drawTree();
+            }
+        }
+    }
+
+    function selectNode(x: number, y: number) {
+        for (let i = 0; i < nodes.length; i++)
+            if (nodes[i].containsPoint(x, y)) 
+                return nodes[i];
+        return null;
+    }
+
+    function computePointInCanvas(e: MouseEvent) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        return {x, y};
+    }
+
 
     return (
         <div>
@@ -110,6 +188,7 @@ fun(5) # make sure you call the function`
             <Controls 
                 onRunCode={onRunCode} 
                 runButtonRef={runButtonRef} 
+                isLoading={loading}
             />
             <TreeVisualization  
                 canvasRef={canvasRef}
