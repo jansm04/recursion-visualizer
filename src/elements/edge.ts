@@ -9,9 +9,10 @@ class Edge {
         this.child = child;
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D, colour: string) {
         var point = this.computeEndPoints();
         if (!point) return;
+        ctx.strokeStyle = colour;
         ctx.beginPath();
         ctx.moveTo(point.px, point.py);
         ctx.lineTo(point.cx, point.cy);

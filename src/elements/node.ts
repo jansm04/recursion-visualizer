@@ -14,20 +14,21 @@ class Node {
         this.rv = rv;
     }
 
-    drawArgument(ctx: CanvasRenderingContext2D) {
+    drawArgument(ctx: CanvasRenderingContext2D, colour: string) {
         if (!this.arg) return;
         ctx.font = "12px Arial";
-        ctx.fillStyle = "white";
+        ctx.fillStyle = colour;
         var width = ctx.measureText(this.arg).width;
         var x = this.x - width / 2;
         ctx.fillText(this.arg, x, this.y + offset);
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D, colour: string) {
+        ctx.strokeStyle = colour;
         ctx.beginPath();
         ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
         ctx.stroke();
-        this.drawArgument(ctx);
+        this.drawArgument(ctx, colour);
     }
 
     computeClosestPoint(x: number, y: number) {
@@ -38,6 +39,10 @@ class Node {
         var px = this.x + distX * vertexRadius / dist;
         var py = this.y + distY * vertexRadius / dist;
         return {px, py};
+    }
+
+    containsPoint(x: number, y: number) {
+        return vertexRadius*vertexRadius > (x - this.x)*(x - this.x) + (y - this.y)*(y - this.y);
     }
 
 }
