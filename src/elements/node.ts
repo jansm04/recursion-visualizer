@@ -1,4 +1,5 @@
 const vertexRadius = 15
+const offset = 4;
 
 class Node {
     x: number;
@@ -13,10 +14,20 @@ class Node {
         this.rv = rv;
     }
 
+    drawArgument(ctx: CanvasRenderingContext2D) {
+        if (!this.arg) return;
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "white";
+        var width = ctx.measureText(this.arg).width;
+        var x = this.x - width / 2;
+        ctx.fillText(this.arg, x, this.y + offset);
+    }
+
     draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
         ctx.stroke();
+        this.drawArgument(ctx);
     }
 
     computeClosestPoint(x: number, y: number) {
