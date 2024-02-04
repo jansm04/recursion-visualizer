@@ -6,6 +6,12 @@ import TreeVisualization from "./tree_vis"
 import toMap from "../tools/map_handler"
 import Controls from "./controls"
 
+// elements
+import Node from "../elements/node"
+
+import Call from "../interfaces/call"
+import Edge from "../elements/edge"
+
 const Main = () => {
 
     const runButtonRef = useRef<HTMLButtonElement>(null);
@@ -20,7 +26,7 @@ def fun(n): # NOTE: do NOT change this line
     else:
         return fun(n - 1) + fun(n - 2)
 
-fun(5) # make sure you call the function`
+fun(5) # make sure you call the function`    
         
     const [code, setCode] = useState<string>(defaultCode);
     var isReady = false;
@@ -30,9 +36,15 @@ fun(5) # make sure you call the function`
         setCode(code);
     }
 
-    function drawTree() {
+    function sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    
+
+    function drawTree(map: Map<number, Call>, arg: string) {
         if (!isReady) return;
-        
+
         var ctx = canvasRef.current?.getContext("2d");
         var rect = canvasRef.current?.getBoundingClientRect();
 
@@ -40,9 +52,29 @@ fun(5) # make sure you call the function`
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 4;
         ctx.strokeStyle = "white"
-        ctx.beginPath();
-        ctx.arc(window.innerWidth / 2, 100, 20, 0, 2 * Math.PI);
-        ctx.stroke();
+
+        var front = map.get(Number.parseInt(arg));
+        if (!front) return;
+
+        async function traverseNodes(call: Call, arg: string, x: number, y: number, level: number, parent: Node | null) {
+            if (!call || !ctx) return;
+            var node = new Node(x, y, arg, call.rv.toString());
+            var edge = new Edge(parent, node);
+            node.draw(ctx);
+            edge.draw(ctx);
+            await sleep(1000);
+            for (let i = 0; i < call.children.length; i++) {
+                var child = map.get(call.children[i]);
+                if (child) {
+                    level++;
+                    var childX = x - (300 / Math.pow(level, 1.5)) + (600 * i / Math.pow(level, 1.5));
+                    var childY = y + 100;
+                    await traverseNodes(child, call.children[i].toString(), childX, childY, level, node);
+                    level--;
+                }
+            }        
+        }
+        traverseNodes(front, arg, window.innerWidth / 2, 60, 0, null);
     }
 
     async function onRunCode() {
@@ -62,21 +94,11 @@ fun(5) # make sure you call the function`
             var arg = json.arg;
             console.log("Inital Argument", arg);
             isReady = true;
-            drawTree();
+            drawTree(map, "6");
         } else {
             console.log('An error occurred executing the code.');
         }
     }
-
-    function handleResize() {
-        if (!canvasRef.current) return;
-        canvasRef.current.width = window.innerWidth - window.innerWidth * 0.1;
-        canvasRef.current.height = window.innerHeight - window.innerHeight * 0.1;
-        drawTree();
-    }
-
-    window.onresize = handleResize;
-
 
     return (
         <div>
