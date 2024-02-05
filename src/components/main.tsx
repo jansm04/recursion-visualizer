@@ -54,6 +54,7 @@ fun(5) # make sure you call the function`
         
     const [code, setCode] = useState<string>(defaultCode);
     const [loading, setLoading] = useState<boolean>(false);
+    const [callInfo, setCallInfo] = useState<string>("");
     var nodes = new Array<Node>();
     var edges = new Array<Edge>();
     var hovered: Node | null = null;
@@ -162,6 +163,7 @@ fun(5) # make sure you call the function`
             if (selectedNode != hovered) {
                 hovered = selectedNode;
                 drawTree();
+                setCallInfo(hovered ? `fun(${hovered.arg}) returns ${hovered.rv}` : "");
             }
         }
     }
@@ -195,6 +197,7 @@ fun(5) # make sure you call the function`
                 runButtonRef={runButtonRef} 
                 isLoading={loading}
             />
+            <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
             <TreeVisualization  
                 canvasRef={canvasRef}
             />
