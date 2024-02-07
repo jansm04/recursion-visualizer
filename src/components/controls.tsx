@@ -5,7 +5,7 @@ const Controls = ({
     runButtonRef,
     isLoading
 }:{
-    onRunCode: () => Promise<void>,
+    onRunCode: () => void,
     runButtonRef: RefObject<HTMLButtonElement>,
     isLoading: boolean
 }) => {

@@ -12,12 +12,8 @@ import Node from "../elements/node"
 import Call from "../interfaces/call"
 import Edge from "../elements/edge"
 
-const Main = () => {
 
-    const runButtonRef = useRef<HTMLButtonElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    const defaultCode = 
+const defaultCode = 
 `# Enter a recursive function to visualize!
 
 def fun(n): # NOTE: do NOT change this line
@@ -27,6 +23,14 @@ def fun(n): # NOTE: do NOT change this line
         return fun(n - 1) + fun(n - 2)
 
 fun(5) # make sure you call the function`
+
+var nodes = new Array<Node>();
+var edges = new Array<Edge>();
+var hovered: Node | null = null;
+var selectedNode: Node | null = null;
+var isAnimating = false;
+
+const Main = () => {
 
     // var testMap = new Map<number, Call>();
     // testMap.set(0, {
@@ -49,17 +53,14 @@ fun(5) # make sure you call the function`
     //     rv: 5,
     //     children: [3, 2]
     // });
-
-    
         
+    const runButtonRef = useRef<HTMLButtonElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
     const [code, setCode] = useState<string>(defaultCode);
     const [loading, setLoading] = useState<boolean>(false);
     const [callInfo, setCallInfo] = useState<string>("");
-    var nodes = new Array<Node>();
-    var edges = new Array<Edge>();
-    var hovered: Node | null = null;
-    var selectedNode: Node | null = null;
-
+    
     function handleCodeChange(code: string | undefined) {
         if (!code) return;
         setCode(code);
@@ -84,8 +85,6 @@ fun(5) # make sure you call the function`
         if (!ctx) return;
         ctx.lineWidth = 3;
         var strokeStyle = "white";
-        canvasRef.current?.removeEventListener('mousemove', onMouseMove);
-
         var front = map.get(Number.parseInt(arg));
         if (!front) return;
 
@@ -103,11 +102,14 @@ fun(5) # make sure you call the function`
                 var child = map.get(call.children[i]);
                 if (!child) return;
             }
+            var gap = window.innerWidth * 0.1;
             for (let i = 0; i < call.children.length; i++) {
                 var child = map.get(call.children[i]);
                 if (child) {
                     level += 0.2;
-                    var childX = x - (200 / Math.pow(level, 4)) + (400 * i / Math.pow(level, 4));
+                    var offsetX = gap / Math.pow(level, 4);
+                    var interval = offsetX * 2 / (call.children.length - 1);
+                    var childX = x - offsetX + interval * i;
                     var childY = y + 100;
                     await traverseNodes(child, call.children[i].toString(), childX, childY, level, node);
                     level -= 0.2;
@@ -115,11 +117,9 @@ fun(5) # make sure you call the function`
             }        
         }
         await traverseNodes(front, arg, window.innerWidth / 2, 60, 0.6, null);
-        canvasRef.current?.addEventListener('mousemove', onMouseMove);
     }
 
     function drawTree() {
-
         var ctx = canvasRef.current?.getContext("2d");
         var rect = canvasRef.current?.getBoundingClientRect();
 
@@ -131,14 +131,20 @@ fun(5) # make sure you call the function`
             edges[i].draw(ctx, "white");
         }
         for (let i = 0; i < nodes.length; i++) {
-            var strokestyle = nodes[i] == hovered ? "blue" : "white"
+            var strokestyle = nodes[i] == hovered ? "blue" : "white";
             nodes[i].draw(ctx, strokestyle);
         }
     }
 
+    function resetTree() {
+        nodes = new Array<Node>();
+        edges = new Array<Edge>();
+    }
+
     async function onRunCode() {
-        setLoading(true);
+        setLoading(true);  
         resetCtx();
+        resetTree();
         var response = await fetch("http://127.0.0.1:5000/api", {
             method: "POST",
             body: code
@@ -149,7 +155,9 @@ fun(5) # make sure you call the function`
             var map = toMap(json.text);
             var arg = json.arg;
             setLoading(false);
-            visualizeTree(map, arg);
+            isAnimating = true;
+            await visualizeTree(map, arg);
+            isAnimating = false;
         } else {
             setLoading(false);
             console.log('An error occurred executing the code.');
@@ -157,6 +165,7 @@ fun(5) # make sure you call the function`
     }
 
     function onMouseMove(e: MouseEvent) {
+        if (isAnimating) return;
         var point = computePointInCanvas(e);
         if (point) {
             selectedNode = selectNode(point.x, point.y);
@@ -184,6 +193,14 @@ fun(5) # make sure you call the function`
         return {x, y};
     }
 
+    useEffect(() => {
+        var canvas = canvasRef.current;
+        canvas?.addEventListener('mousemove', onMouseMove);
+        return () => {
+            canvas?.removeEventListener('mousemove', onMouseMove);
+        };
+    }, []);
+    
 
     return (
         <div>
