@@ -18,7 +18,6 @@ def transform():
             "text": 'zip', 
             "arg": 'nada' 
         }
-        print("reached here (1)")
     else:
         text, intialArg = result[0], result[1]
         obj = {
@@ -26,7 +25,6 @@ def transform():
             "text": text, 
             "arg": intialArg 
         }
-        print("reached here (2)")
     jsonObject = json.dumps(obj)
     return jsonObject
 

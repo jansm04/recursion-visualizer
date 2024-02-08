@@ -67,7 +67,7 @@ def edit_returns(code, indices, recursiveArgs):
             rv += code[k]
             k += 1
         # replace return statement with map lines
-        c = insert_lines(code, rv, tab, j, k, recursiveArgs);
+        c = insert_lines(code, rv, tab, j, k, recursiveArgs)
         code, s = c[0], c[1]
         for l in range(len(indices)):
             if (l > i):
