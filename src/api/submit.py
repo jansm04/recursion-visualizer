@@ -44,6 +44,10 @@ def submit(code):
         }
         response = requests.get(url, headers=headers, params=querystring)
         responseText = json.loads(response.text)
+        status = responseText['status']
+        id = status['id']
+        if (id != 3):
+            return False
         outputText = responseText['stdout']
         print(outputText)
         return (outputText, initialArg)

@@ -11,12 +11,22 @@ CORS(app)
 def transform():
     body = str(request.data)
     result = sb.submit(body)
-    text, intialArg = result[0], result[1]
-    obj = {
-        "type": "valid", # 'valid' or 'invalid'
-        "text": text, # map text or error text
-        "arg": intialArg # initial argument
-    }
+    print(result)
+    if not result:
+        obj = {
+            "type": 'invalid', 
+            "text": 'zip', 
+            "arg": 'nada' 
+        }
+        print("reached here (1)")
+    else:
+        text, intialArg = result[0], result[1]
+        obj = {
+            "type": 'valid', 
+            "text": text, 
+            "arg": intialArg 
+        }
+        print("reached here (2)")
     jsonObject = json.dumps(obj)
     return jsonObject
 
