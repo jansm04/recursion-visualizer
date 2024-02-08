@@ -3,11 +3,13 @@ import { RefObject } from "react"
 const Controls = ({
     onRunCode,
     runButtonRef,
-    isLoading
+    isLoading,
+    isInvalid
 }:{
     onRunCode: () => void,
     runButtonRef: RefObject<HTMLButtonElement>,
     isLoading: boolean
+    isInvalid: boolean
 }) => {
     return (
         <div className="bg-[#161616]">
@@ -20,6 +22,7 @@ const Controls = ({
                 </button>
             </div>
             { isLoading ? <div className="ml-6 m-2 inline-block">one sec...</div> : <></> }
+            { isInvalid ? <div className="ml-6 m-2 inline-block">fix your code bud</div> : <></> }
         </div>
         
     )

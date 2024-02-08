@@ -14,10 +14,10 @@ import Edge from "../elements/edge"
 
 
 const defaultCode = 
-`# Enter a recursive function to visualize!
+`# Enter a recursive function to visualize
 
-def fun(n): # NOTE: do NOT change this line
-    if (n == 0 or n == 1):
+def fun(n): # do NOT change this line
+    if n == 0 or n == 1:
         return 1
     else:
         return fun(n - 1) + fun(n - 2)
@@ -59,6 +59,7 @@ const Main = () => {
 
     const [code, setCode] = useState<string>(defaultCode);
     const [loading, setLoading] = useState<boolean>(false);
+    const [invalid, setInvalid] = useState<boolean>(false);
     const [callInfo, setCallInfo] = useState<string>("");
     
     function handleCodeChange(code: string | undefined) {
@@ -152,12 +153,16 @@ const Main = () => {
         if (response.ok) {
             var json = await response.json();
             if (!json.text) return;
-            var map = toMap(json.text);
-            var arg = json.arg;
             setLoading(false);
-            isAnimating = true;
-            await visualizeTree(map, arg);
-            isAnimating = false;
+            if (json.type == 'invalid') {
+                setInvalid(true);
+            } else {
+                var map = toMap(json.text);
+                var arg = json.arg;
+                isAnimating = true;
+                await visualizeTree(map, arg);
+                isAnimating = false;
+            }
         } else {
             setLoading(false);
             console.log('An error occurred executing the code.');
@@ -213,6 +218,7 @@ const Main = () => {
                 onRunCode={onRunCode} 
                 runButtonRef={runButtonRef} 
                 isLoading={loading}
+                isInvalid={invalid}
             />
             <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
             <TreeVisualization  
