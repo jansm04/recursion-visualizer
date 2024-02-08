@@ -7,32 +7,29 @@ import Call from "../interfaces/call";
  * each entry is a Call object consisting of the function call's return 
  * value and the arguments passed to its recursive function calls.
 */
-export default function toMap(responseText: string): Map<number, Call> {
-    var map = new Map<number, Call>();
+export default function toMap(responseText: string): Map<string, Call> {
+    var map = new Map<string, Call>();
     var i = 1;
     while (i < responseText.length && responseText[i] != '}') {
         var keyString = "";
         while (responseText[i] != ':')
             keyString += responseText[i++];
-        var keyNumber = Number.parseInt(keyString);
         i += 3;
         var returnString = "";
         while (responseText[i] != ',')
             returnString += responseText[i++];
-        var returnNumber = Number.parseInt(returnString);
         i += 3;
-        var children = new Array<number>();
+        var children = new Array<string>();
         while (responseText[i] != ']') {
             var childString = "";
             while (responseText[i] != ',' && responseText[i] != ']')
                 childString += responseText[i++];
-            var childNumber = Number.parseInt(childString);
             if (responseText[i] == ',') 
                 i += 2;
-            children.push(childNumber);
+            children.push(childString);
         }
-        map.set(keyNumber, {
-            rv: returnNumber,
+        map.set(keyString, {
+            rv: returnString,
             children: children
         });
         i += 4;

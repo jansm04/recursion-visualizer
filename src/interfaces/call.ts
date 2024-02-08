@@ -1,6 +1,6 @@
 interface Call {
-    rv: number,
-    children: number[]
+    rv: string,
+    children: string[]
 };
 
 export default Call;

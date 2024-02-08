@@ -80,17 +80,17 @@ const Main = () => {
         return ctx;
     }
 
-    async function visualizeTree(map: Map<number, Call>, arg: string) {
+    async function visualizeTree(map: Map<string, Call>, arg: string) {
         var ctx = resetCtx();
         if (!ctx) return;
         ctx.lineWidth = 3;
         var strokeStyle = "white";
-        var front = map.get(Number.parseInt(arg));
+        var front = map.get(arg);
         if (!front) return;
 
         async function traverseNodes(call: Call, arg: string, x: number, y: number, level: number, parent: Node | null) {
             if (!call || !ctx) return;
-            var node = new Node(x, y, arg, call.rv.toString());
+            var node = new Node(x, y, arg, call.rv);
             var edge = new Edge(parent, node);
             nodes.push(node);
             edges.push(edge);
@@ -111,7 +111,7 @@ const Main = () => {
                     var interval = offsetX * 2 / (call.children.length - 1);
                     var childX = x - offsetX + interval * i;
                     var childY = y + 100;
-                    await traverseNodes(child, call.children[i].toString(), childX, childY, level, node);
+                    await traverseNodes(child, call.children[i], childX, childY, level, node);
                     level -= 0.2;
                 }
             }        
