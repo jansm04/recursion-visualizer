@@ -6,12 +6,16 @@ class Node {
     y: number;
     arg: string;
     rv: string;
+    isBaseCase: boolean;
+    isMemoized: boolean;
     
-    constructor(x: number, y: number, arg: string, rv: string) {
+    constructor(x: number, y: number, arg: string, rv: string, isBaseCase: boolean, isMemoized: boolean) {
         this.x = x;
         this.y = y;
         this.arg = arg;
         this.rv = rv;
+        this.isBaseCase = isBaseCase;
+        this.isMemoized = isMemoized;
     }
 
     drawArgument(ctx: CanvasRenderingContext2D, colour: string) {

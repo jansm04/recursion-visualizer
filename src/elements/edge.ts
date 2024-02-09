@@ -3,10 +3,14 @@ import Node from "../elements/node"
 class Edge {
     parent: Node | null;
     child: Node;
+    isBaseCase: boolean;
+    isMemoized: boolean;
 
-    constructor(parent: Node | null, child: Node) {
+    constructor(parent: Node | null, child: Node, isBaseCase: boolean, isMemoized: boolean) {
         this.parent = parent;
         this.child = child;
+        this.isBaseCase = isBaseCase;
+        this.isMemoized = isMemoized;
     }
 
     draw(ctx: CanvasRenderingContext2D, colour: string) {

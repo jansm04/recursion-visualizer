@@ -24,6 +24,13 @@ def fun(n): # do NOT change this line
 
 fun(5) # make sure you call the function`
 
+const colourScheme = {
+    internal: "blue",
+    baseCase: "red",
+    memoized: "red",
+    hovered: "yellow"
+}
+
 var nodes = new Array<Node>();
 var edges = new Array<Edge>();
 var hovered: Node | null = null;
@@ -85,24 +92,32 @@ const Main = () => {
         var ctx = resetCtx();
         if (!ctx) return;
         ctx.lineWidth = 3;
-        var strokeStyle = "white";
         var front = map.get(arg);
         if (!front) return;
 
+        var memoized = new Map();
+
         async function traverseNodes(call: Call, arg: string, x: number, y: number, level: number, parent: Node | null) {
             if (!call || !ctx) return;
-            var node = new Node(x, y, arg, call.rv);
-            var edge = new Edge(parent, node);
+            var node = new Node(x, y, arg, call.rv, call.isBaseCase && !call.isMemoized, call.isMemoized && memoized.get(arg));
+            var edge = new Edge(parent, node, call.isBaseCase && !call.isMemoized, call.isMemoized && memoized.get(arg));
             nodes.push(node);
             edges.push(edge);
-            node.draw(ctx, strokeStyle);
-            edge.draw(ctx, "white");
+
+            // colour of nodes
+            node.draw(ctx, getStrokeStyle(node));
+            edge.draw(ctx, getStrokeStyle(edge));
+
             await sleep(1000);
-            // check if call returns base case
-            for (let i = 0; i < call.children.length; i++) {
-                var child = map.get(call.children[i]);
-                if (!child) return;
+
+            // return if function call returns a base case
+            if (call.isBaseCase && !call.isMemoized) return;
+
+            if (call.isMemoized) {
+                if (memoized.get(arg)) return; // return if function call returns a memoized argument
+                else memoized.set(arg, true); // memoize argument
             }
+
             var gap = window.innerWidth * 0.1;
             for (let i = 0; i < call.children.length; i++) {
                 var child = map.get(call.children[i]);
@@ -129,11 +144,10 @@ const Main = () => {
         ctx.lineWidth = 3;
         
         for (let i = 0; i < edges.length; i++) {
-            edges[i].draw(ctx, "white");
+            edges[i].draw(ctx, getStrokeStyle(edges[i]));
         }
         for (let i = 0; i < nodes.length; i++) {
-            var strokestyle = nodes[i] == hovered ? "blue" : "white";
-            nodes[i].draw(ctx, strokestyle);
+            nodes[i].draw(ctx, getStrokeStyle(nodes[i]));
         }
     }
 
@@ -159,6 +173,9 @@ const Main = () => {
                 setInvalid(true);
             } else {
                 var map = toMap(json.text);
+                map.forEach((value, key) => {
+                    console.log(key, value);
+                })
                 var arg = json.arg;
                 isAnimating = true;
                 await visualizeTree(map, arg);
@@ -197,6 +214,16 @@ const Main = () => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         return {x, y};
+    }
+
+    function getStrokeStyle(element: Node | Edge) {
+        if (element instanceof Node && hovered == element)
+            return colourScheme.hovered;
+        if (element.isBaseCase && !element.isMemoized)
+            return colourScheme.baseCase;
+        if (element.isMemoized)
+            return colourScheme.memoized;
+        return colourScheme.internal;
     }
 
     useEffect(() => {
