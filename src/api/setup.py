@@ -38,7 +38,7 @@ def insert_return_lines(code, rv, tab, start, end, recursiveArgs):
     originalReturnLen = len(tab) + 7 + len(rv)
 
     # number of characters inserted
-    s = len(tempVarLine) + len(mapLine) + len(returnLine) - originalReturnLen
+    s = len(tempVarLine) + len(memoLine) + len(mapLine) + len(returnLine) - originalReturnLen
     return (code, s)
 
 
