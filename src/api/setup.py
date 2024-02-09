@@ -21,16 +21,18 @@ printMapLine = "print(qTY8eDfs9)"
 #   return <return_value>
 # with
 #   a = <return_value>
+#   isMemoized = n in map and temp == count and not map[n][2]
 #   map[n] = (a, [<arg1>, ... ,<argn>], isBaseCase)
 #   return a
 def insert_return_lines(code, rv, tab, start, end, recursiveArgs):
     tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
-    mapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, [" + recursiveArgs + "], fV42hUijP == b7Hy4dv3A)\\n"
+    memoLine = tab + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
+    mapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, [" + recursiveArgs + "], fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
     returnLine = tab + "return " + "jB2h3dCi1"
 
     start = code[:start]
     end = code[end:]
-    code = start + tempVarLine + mapLine + returnLine + end
+    code = start + tempVarLine + memoLine + mapLine + returnLine + end
 
     # add 7 to count 'return' keyword itself and space
     originalReturnLen = len(tab) + 7 + len(rv)
