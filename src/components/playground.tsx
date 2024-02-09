@@ -1,18 +1,18 @@
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 
 const Playground = ({
-    defaultCode,
+    code,
     onCodeChange
 } : {
-    defaultCode: string,
+    code: string,
     onCodeChange: (code: string | undefined) => void
 }) => {
 
     return (
         <Editor 
+            value={code}
             height="32vh"
             defaultLanguage="python" 
-            defaultValue={defaultCode}
             onChange={onCodeChange}
             theme='vs-dark'
             options={{

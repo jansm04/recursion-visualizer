@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import Header from "./header"
 import Playground from "./playground"
 import TreeVisualization from "./tree_vis"
@@ -8,21 +8,10 @@ import Controls from "./controls"
 
 // elements
 import Node from "../elements/node"
-
-import Call from "../interfaces/call"
 import Edge from "../elements/edge"
 
-
-const defaultCode = 
-`# Enter a recursive function to visualize
-
-def fun(n): # do NOT change this line
-    if n == 0 or n == 1:
-        return 1
-    else:
-        return fun(n - 1) + fun(n - 2)
-
-fun(5) # make sure you call the function`
+import Call from "../interfaces/call"
+import { templates } from "./templates/templates"
 
 const colourScheme = {
     internal: "blue",
@@ -64,7 +53,7 @@ const Main = () => {
     const runButtonRef = useRef<HTMLButtonElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [code, setCode] = useState<string>(defaultCode);
+    const [code, setCode] = useState<string>(templates.get('fibonacci').code);
     const [loading, setLoading] = useState<boolean>(false);
     const [invalid, setInvalid] = useState<boolean>(false);
     const [callInfo, setCallInfo] = useState<string>("");
@@ -200,6 +189,11 @@ const Main = () => {
         }
     }
 
+    function handleTemplateSelect(event: ChangeEvent<HTMLSelectElement>) {
+        var templateCode = templates.get(event.target.value);
+        setCode(templateCode.code);
+    }
+
     function selectNode(x: number, y: number) {
         for (let i = 0; i < nodes.length; i++)
             if (nodes[i].containsPoint(x, y)) 
@@ -239,11 +233,12 @@ const Main = () => {
         <div>
             <Header />
             <Playground 
-                defaultCode={defaultCode} 
+                code={code} 
                 onCodeChange={handleCodeChange} 
             />
             <Controls 
                 onRunCode={onRunCode} 
+                handleTemplateSelect={handleTemplateSelect}
                 runButtonRef={runButtonRef} 
                 isLoading={loading}
                 isInvalid={invalid}

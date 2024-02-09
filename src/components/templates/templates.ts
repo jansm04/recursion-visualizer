@@ -1,0 +1,47 @@
+var templates = new Map();
+
+templates.set("custom", {
+        name: "Custom",
+        code: 
+`def fun(n): # do NOT change this line
+    # write your code here
+
+    return n
+
+fun() # make sure you call the function`
+    });
+
+templates.set("fibonacci", {
+    name: "Fibonacci Sequence",
+    code:
+`def fun(n): # do NOT change this line
+    if n == 0 or n == 1:
+        return 1
+    return fun(n - 1) + fun(n - 2)
+
+fun(5) # make sure you call the function`
+});
+
+templates.set("fibonacci-memo", {
+    name: "Fibonacci Sequence w/ Memoization",
+    code:
+`memo = {}
+def fun(n): # do NOT change this line
+    if n == 0 or n == 1:
+        return 1
+    if n not in memo:
+        memo[n] = fun(n - 1) + fun(n - 2)
+    return memo[n]
+
+fun(5) # make sure you call the function`
+});
+
+var keys = new Array();
+keys.push("custom");
+keys.push("fibonacci");
+keys.push("fibonacci-memo");
+
+export {
+    templates,
+    keys
+}
