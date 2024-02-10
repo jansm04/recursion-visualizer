@@ -36,21 +36,23 @@ printMapLine = "print(qTY8eDfs9)"
 # with
 #   a = <return_value>
 #   isMemoized = n in callMap and temp == count and not callMap[n][2]
-#   callMap[n] = (a, levelsMap[level+1], temp == count, isMemoized)
+#   childArgs = levelsMap[level+1] if n not in callMap else callMap[n][1] -- so memoization can't override
+#   callMap[n] = (a, childArgs, temp == count, isMemoized)
 #   levelsMap[level+1] = []
 #   level -= 1
 #   return a
 def insert_return_lines(code, rv, tab, start, end):
     tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
     memoLine = tab + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
-    callMapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, cFV43ghEo[hG5yU321X+1], fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
+    childArgsLine = tab + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if n not in qTY8eDfs9 else qTY8eDfs9[n][1]\\n"
+    callMapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
     levelsMapLine = tab + "cFV43ghEo[hG5yU321X+1] = []\\n"
     levelDecLine = tab + "hG5yU321X -= 1\\n"
     returnLine = tab + "return " + "jB2h3dCi1"
 
     start = code[:start]
     end = code[end:]
-    linesToInsert = tempVarLine + memoLine + callMapLine + levelsMapLine + levelDecLine + returnLine
+    linesToInsert = tempVarLine + memoLine + childArgsLine + callMapLine + levelsMapLine + levelDecLine + returnLine
     code = start + linesToInsert + end
 
     # add 7 to count 'return' keyword itself and space
