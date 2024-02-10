@@ -3,10 +3,10 @@ var templates = new Map();
 templates.set("custom", {
         name: "Custom",
         code: 
-`def fun(n): # do NOT change this line
+`def fun(): # do NOT change this line
     # write your code here
 
-    return n
+
 
 fun() # make sure you call the function`
     });
@@ -36,10 +36,28 @@ def fun(n): # do NOT change this line
 fun(5) # make sure you call the function`
 });
 
+templates.set("coin-change", {
+    name: "Coin Change",
+    code:
+`coins = [1,3,4,5]
+def fun(n): # do NOT change this line
+    if (n == 0): 
+        return 0
+    if (n < 0): 
+        return float('inf')
+    ans = float('inf')
+    for coin in coins:
+        ans = min(ans, 1 + fun(n - coin))
+    return ans
+
+fun(3) # make sure you call the function`
+})
+
 var keys = new Array();
 keys.push("custom");
 keys.push("fibonacci");
 keys.push("fibonacci-memo");
+keys.push("coin-change");
 
 export {
     templates,
