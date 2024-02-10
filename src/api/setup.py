@@ -1,7 +1,7 @@
 import extract as ex
 
 
-# "map = {}\\n"
+# "callMap = {}\\n"
 # maps parameter to node
 # a node is defined as (rv, children)
 # where 
@@ -9,36 +9,55 @@ import extract as ex
 #   children = list of child arguments
 mapInitLine = "qTY8eDfs9 = {}\\n"
 
+# "levelsMap = {}"
+# initializes the levelsMap so we can map each level to a list of arguments at that 
+# level in the recursion tree. once we backtrack to each parent level, (after all 
+# the recursive calls in the function) we can use the arguments in the list for the 
+# level above to set the child arguments in the call map
+levelsMapInitLine = "cFV43ghEo = {}\\n"
+
 # "count = 0"
 # initializes the count for the number of function calls
 countInitLine = "b7Hy4dv3A = 0\\n"
 
-# print(map)
-printMapLine = "print(qTY8eDfs9)"
+# "level = -1"
+# initializes the level variable, which can be used to access the current level in 
+# the recursion tree at each function call
+levelInitLine = "hG5yU321X = -1\\n"
 
+# levelsMap[level+1] = []
+levelZeroListInitLine = "cFV43ghEo[hG5yU321X+1] = []\\n\\n"
+
+# "print(map)"
+printMapLine = "print(qTY8eDfs9)"
 
 # replaces
 #   return <return_value>
 # with
 #   a = <return_value>
-#   isMemoized = n in map and temp == count and not map[n][2]
-#   map[n] = (a, [<arg1>, ... ,<argn>], isBaseCase)
+#   isMemoized = n in callMap and temp == count and not callMap[n][2]
+#   callMap[n] = (a, levelsMap[level+1], temp == count, isMemoized)
+#   levelsMap[level+1] = []
+#   level -= 1
 #   return a
-def insert_return_lines(code, rv, tab, start, end, recursiveArgs):
+def insert_return_lines(code, rv, tab, start, end):
     tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
     memoLine = tab + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
-    mapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, [" + recursiveArgs + "], fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
+    callMapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, cFV43ghEo[hG5yU321X+1], fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
+    levelsMapLine = tab + "cFV43ghEo[hG5yU321X+1] = []\\n"
+    levelDecLine = tab + "hG5yU321X -= 1\\n"
     returnLine = tab + "return " + "jB2h3dCi1"
 
     start = code[:start]
     end = code[end:]
-    code = start + tempVarLine + memoLine + mapLine + returnLine + end
+    linesToInsert = tempVarLine + memoLine + callMapLine + levelsMapLine + levelDecLine + returnLine
+    code = start + linesToInsert + end
 
     # add 7 to count 'return' keyword itself and space
     originalReturnLen = len(tab) + 7 + len(rv)
 
     # number of characters inserted
-    s = len(tempVarLine) + len(memoLine) + len(mapLine) + len(returnLine) - originalReturnLen
+    s = len(linesToInsert) - originalReturnLen
     return (code, s)
 
 
@@ -72,7 +91,7 @@ def edit_returns(code, indices, recursiveArgs):
             rv += code[k]
             k += 1
         # replace return statement with map lines
-        c = insert_return_lines(code, rv, tab, j, k, recursiveArgs)
+        c = insert_return_lines(code, rv, tab, j, k)
         code, s = c[0], c[1]
         for l in range(len(indices)):
             if (l > i):
@@ -84,7 +103,7 @@ def edit_returns(code, indices, recursiveArgs):
 # inserts map initialization and count initialization before 
 # the recursive function
 def insert_initializations(code):
-    return mapInitLine + countInitLine + code
+    return mapInitLine + levelsMapInitLine + countInitLine + levelInitLine + levelZeroListInitLine + code
 
 
 # goes through the code and inserts the global count declaration, the counter  
@@ -99,14 +118,26 @@ def insert_initializations(code):
 #        global count
 #        count += 1  
 #        temp = count
+# 
+#        global level
+#        level += 1
+#        if level+1 not in levelsMap: 
+#            levelsMap[level+1] = []
+#        levelsMap[level].append(n) 
 #        ...
 # 
+def insert_globals(code):
+    # count variable lines
+    globalCountLine = "    global b7Hy4dv3A\\n"        
+    counterIncLine = "    b7Hy4dv3A += 1\\n"           
+    tempInitLine = "    fV42hUijP = b7Hy4dv3A\\n\\n"   
+    # levels map lines
+    globalLevelLine = "    global hG5yU321X\\n"                      
+    levelIncLine = "    hG5yU321X += 1\\n"                           
+    conditionalMapLine = "    if hG5yU321X+1 not in cFV43ghEo:\\n"   
+    listInitLine = "        cFV43ghEo[hG5yU321X+1] = []\\n"          
+    listAppendLine = "    cFV43ghEo[hG5yU321X].append(n)\\n\\n"
 
-def insert_counter_lines(code):
-    globalDecLine = "    global b7Hy4dv3A\\n"          # "global count"
-    counterIncLine = "    b7Hy4dv3A += 1\\n"           # "count += 1"
-    tempInitLine = "    fV42hUijP = b7Hy4dv3A\\n\\n"   # "temp = count"
-    
     header = "\\ndef fun"
     n = len(header)
     i = 0
@@ -121,7 +152,9 @@ def insert_counter_lines(code):
     start = code[:i]
     end = code[i:]
 
-    return start + globalDecLine + counterIncLine + tempInitLine + end
+    countLines = globalCountLine + counterIncLine + tempInitLine
+    levelsMapLines = globalLevelLine + levelIncLine + conditionalMapLine + listInitLine + listAppendLine
+    return start + countLines + levelsMapLines + end
 
 
 # inserts print statement after the function call
@@ -141,7 +174,7 @@ def setup(code):
 
     # make necessary insertions
     code = insert_initializations(code)
-    code = insert_counter_lines(code)
+    code = insert_globals(code)
     code = insert_print_line(code)
 
     return (code, initalArg)

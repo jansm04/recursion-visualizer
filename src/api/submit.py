@@ -47,9 +47,9 @@ def submit(code):
         status = responseText['status']
         id = status['id']
         if (id != 3):
+            print(responseText)
             return False
         outputText = responseText['stdout']
-        print(outputText)
         return (outputText, initialArg)
     except:
         print("An error occurred while getting the code submission.")
