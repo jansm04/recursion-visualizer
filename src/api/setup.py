@@ -78,7 +78,7 @@ def find_returns(code):
 
 # goes through recursive function and edits every return statement so we 
 # store the return value in a map before we return the value
-def edit_returns(code, indices, recursiveArgs):
+def edit_returns(code, indices):
     for i in range(len(indices)):
         idx = indices[i]
         tab = ""
@@ -169,10 +169,10 @@ def insert_print_line(code):
 def setup(code):
     indices = find_returns(code)
     extracts = ex.extract(code)
-    recursiveArgs, initalArg = extracts[0], extracts[1]
+    initalArg = extracts[0]
 
     # replace return statement with custom return lines
-    code = edit_returns(code, indices, recursiveArgs)
+    code = edit_returns(code, indices)
 
     # make necessary insertions
     code = insert_initializations(code)

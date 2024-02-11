@@ -13,36 +13,6 @@ def extract_fn_name(code):
         i += 1
     return fnName
 
-# goes through code after function header and finds each recursive 
-# function call. at each call, we extract the arguments and save them 
-# to a string
-def extract_recursive_args(code, fnName):
-    recursiveArgs, insideFnIndicator = "", "\\n    "
-    i = 0
-    # skip function header
-    while i < len(code) and code[i] != ":":
-        i += 1
-    i += 1
-    while i+len(fnName) < len(code) and i+6 < len(code):
-        if code[i:i+2] == "\\n" and code[i:i+6] != insideFnIndicator:
-            break
-        if code[i:i+len(fnName)] == fnName:
-            while i < len(code) and code[i] != '(':
-                i += 1
-            i += 1
-            while i < len(code) and code[i] != ')':
-                recursiveArgs += code[i]
-                i += 1
-            i += 1
-            recursiveArgs = recursiveArgs + ", "
-        else:
-            i += 1
-    
-    if len(recursiveArgs) > 0:
-        recursiveArgs = recursiveArgs[:-2]
-    return recursiveArgs
-
-
 # goes through code and extracts the arg passed to the 
 # intial function call
 def extract_initial_arg(code, fnName):
@@ -63,6 +33,5 @@ def extract_initial_arg(code, fnName):
 
 def extract(code):
     fnName = extract_fn_name(code)
-    recursiveArgs = extract_recursive_args(code, fnName)
     initialArg = extract_initial_arg(code, fnName)
-    return (recursiveArgs, initialArg)
+    return (initialArg)
