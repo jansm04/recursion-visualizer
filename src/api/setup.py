@@ -41,14 +41,14 @@ printMapLine = "print(qTY8eDfs9)"
 #   levelsMap[level+1] = []
 #   level -= 1
 #   return a
-def insert_return_lines(code, rv, tab, start, end):
-    tempVarLine = tab + "jB2h3dCi1 = " + rv + "\\n"
-    memoLine = tab + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
-    childArgsLine = tab + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if n not in qTY8eDfs9 else qTY8eDfs9[n][1]\\n"
-    callMapLine = tab + "qTY8eDfs9[n] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
-    levelsMapLine = tab + "cFV43ghEo[hG5yU321X+1] = []\\n"
-    levelDecLine = tab + "hG5yU321X -= 1\\n"
-    returnLine = tab + "return " + "jB2h3dCi1"
+def insert_return_lines(code, rv, indent, start, end):
+    tempVarLine = indent + "jB2h3dCi1 = " + rv + "\\n"
+    memoLine = indent + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
+    childArgsLine = indent + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if n not in qTY8eDfs9 else qTY8eDfs9[n][1]\\n"
+    callMapLine = indent + "qTY8eDfs9[n] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
+    levelsMapLine = indent + "cFV43ghEo[hG5yU321X+1] = []\\n"
+    levelDecLine = indent + "hG5yU321X -= 1\\n"
+    returnLine = indent + "return " + "jB2h3dCi1"
 
     start = code[:start]
     end = code[end:]
@@ -56,7 +56,7 @@ def insert_return_lines(code, rv, tab, start, end):
     code = start + linesToInsert + end
 
     # add 7 to count 'return' keyword itself and space
-    originalReturnLen = len(tab) + 7 + len(rv)
+    originalReturnLen = len(indent) + 7 + len(rv)
 
     # number of characters inserted
     s = len(linesToInsert) - originalReturnLen
@@ -76,25 +76,55 @@ def find_returns(code):
         i += 1
     return indices
 
+ # returns true if the return statement is on the same line as a condition
+def has_line_break(code, idx):
+    while idx-2 >= 0:
+        if code[idx] == ':':
+            return True
+        if code[idx-2:idx] == "\\n":
+            return False
+        idx -= 1
+    return False
+
 # goes through recursive function and edits every return statement so we 
 # store the return value in a map before we return the value
 def edit_returns(code, indices):
     for i in range(len(indices)):
         idx = indices[i]
-        tab = ""
-        j = idx
-        while j >= 0 and code[j-2:j] != "\\n": 
-            tab = tab + " "
-            j -= 1
+        indent = ""
+        j, k = idx, 0
+        # insert a line break and increase the indent in the conditional statement by one more tab
+        if has_line_break(code, idx):
+            while j >= 0 and code[j-2:j] != "\\n":
+                j -= 1
+            while code[j] == " ":
+                indent += code[j]
+                j += 1
+            start = code[:idx-1]
+            end = code[idx:]
+            lineBreak = "\\n" + indent + "    "
+            code = start + lineBreak + end
+            j = idx+1
+            k += len(lineBreak)-1
+            indent += "    "
+            # update indices for remaining return statements in the code
+            for l in range(len(indices)):
+                if (l > i):
+                    indices[l] += len(lineBreak)-1
+        else:
+            while j >= 0 and code[j-2:j] != "\\n": 
+                indent = indent + " "
+                j -= 1
         
         rv = ""
-        k = idx+7
+        k += idx+7
         while k+2 < len(code) and code[k:k+2] != "\\n":
             rv += code[k]
             k += 1
         # replace return statement with map lines
-        c = insert_return_lines(code, rv, tab, j, k)
+        c = insert_return_lines(code, rv, indent, j, k)
         code, s = c[0], c[1]
+        # update indices for remaining return statements in the code
         for l in range(len(indices)):
             if (l > i):
                 indices[l] += s
