@@ -158,7 +158,7 @@ def insert_initializations(code):
 #        levelsMap[level].append(n) 
 #        ...
 # 
-def insert_globals(code):
+def insert_globals(code, fnName):
     # count variable lines
     globalCountLine = "    global b7Hy4dv3A\\n"        
     counterIncLine = "    b7Hy4dv3A += 1\\n"           
@@ -170,7 +170,7 @@ def insert_globals(code):
     listInitLine = "        cFV43ghEo[hG5yU321X+1] = []\\n"          
     listAppendLine = "    cFV43ghEo[hG5yU321X].append(n)\\n\\n"
 
-    header = "\\ndef fun"
+    header = "\\ndef " + fnName
     n = len(header)
     i = 0
     # traverse to function header
@@ -199,14 +199,14 @@ def insert_print_line(code):
 def setup(code):
     indices = find_returns(code)
     extracts = ex.extract(code)
-    initalArg = extracts[0]
+    initalArg, fnName = extracts[0], extracts[1]
 
     # replace return statement with custom return lines
     code = edit_returns(code, indices)
 
     # make necessary insertions
     code = insert_initializations(code)
-    code = insert_globals(code)
+    code = insert_globals(code, fnName)
     code = insert_print_line(code)
 
     return (code, initalArg)

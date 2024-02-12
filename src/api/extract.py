@@ -1,13 +1,13 @@
 # extracts the function name from the function header
 def extract_fn_name(code):
     fnName, keyword = "", "def "
-    i = 0
+    i, keyword_len = 0, len(keyword)
     while i < len(code):
-        if (code[i:i+4] == keyword):
+        if (code[i:i+keyword_len] == keyword):
             break
         i += 1
 
-    i += 4
+    i += keyword_len
     while i < len(code) and code[i] != '(':
         fnName += code[i]
         i += 1
@@ -34,4 +34,4 @@ def extract_initial_arg(code, fnName):
 def extract(code):
     fnName = extract_fn_name(code)
     initialArg = extract_initial_arg(code, fnName)
-    return (initialArg)
+    return (initialArg, fnName)
