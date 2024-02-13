@@ -13,25 +13,43 @@ def extract_fn_name(code):
         i += 1
     return fnName
 
-# goes through code and extracts the arg passed to the 
-# intial function call
-def extract_initial_arg(code, fnName):
-    initialArg, keyword = "", "\\n" + fnName
-    n = len(keyword)
-    i = 0
+# extracts the parameters of the recursive function so we can later 
+# create a map of function calls using the parameters as the map key
+def extract_params(code, fnName):
+    params, keyword = "", "def " + fnName
+    i, n = 0, len(keyword)
     while i+n < len(code) and code[i:i+n] != keyword:
         i += 1
     i += n
-    while code[i] != '(':
+    while i < len(code) and code[i] != '(':
         i += 1
     i += 1
-    while code[i] != ')':
-        initialArg += code[i]
+    while i < len(code) and code[i] != ')':
+        params += code[i]
         i += 1
-    return initialArg
+    return params
+
+
+# goes through code and extracts the arg(s) passed to the 
+# intial function call
+def extract_initial_args(code, fnName):
+    initialArgs, keyword = "", "\\n" + fnName
+    i, n = 0, len(keyword)
+    while i+n < len(code) and code[i:i+n] != keyword:
+        i += 1
+    i += n
+    while i < len(code) and code[i] != '(':
+        i += 1
+    i += 1
+    while i < len(code) and code[i] != ')':
+        initialArgs += code[i]
+        i += 1
+    argsInKeyForm = "(" + initialArgs + ")"
+    return argsInKeyForm
 
 
 def extract(code):
     fnName = extract_fn_name(code)
-    initialArg = extract_initial_arg(code, fnName)
-    return (initialArg, fnName)
+    params = extract_params(code, fnName)
+    initialArg = extract_initial_args(code, fnName)
+    return (initialArg, fnName, params)

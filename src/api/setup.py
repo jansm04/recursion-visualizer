@@ -1,6 +1,5 @@
 import extract as ex
 
-
 # "callMap = {}\\n"
 # maps parameter to node
 # a node is defined as (rv, children)
@@ -35,17 +34,17 @@ printMapLine = "print(qTY8eDfs9)"
 #   return <return_value>
 # with
 #   a = <return_value>
-#   isMemoized = n in callMap and temp == count and not callMap[n][2]
-#   childArgs = levelsMap[level+1] if n not in callMap else callMap[n][1] -- so memoization can't override
-#   callMap[n] = (a, childArgs, temp == count, isMemoized)
+#   isMemoized = key in callMap and temp == count and not callMap[key][2]
+#   childArgs = levelsMap[level+1] if key not in callMap else callMap[key][1] -- so memoization can't override
+#   callMap[key] = (a, childArgs, temp == count, isMemoized)
 #   levelsMap[level+1] = []
 #   level -= 1
 #   return a
 def insert_return_lines(code, rv, indent, start, end):
     tempVarLine = indent + "jB2h3dCi1 = " + rv + "\\n"
-    memoLine = indent + "d4fHj8KaC = n in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[n][2]\\n"
-    childArgsLine = indent + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if n not in qTY8eDfs9 else qTY8eDfs9[n][1]\\n"
-    callMapLine = indent + "qTY8eDfs9[n] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
+    memoLine = indent + "d4fHj8KaC = v7yG8jN2x in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[v7yG8jN2x][2]\\n"
+    childArgsLine = indent + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if v7yG8jN2x not in qTY8eDfs9 else qTY8eDfs9[v7yG8jN2x][1]\\n"
+    callMapLine = indent + "qTY8eDfs9[v7yG8jN2x] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
     levelsMapLine = indent + "cFV43ghEo[hG5yU321X+1] = []\\n"
     levelDecLine = indent + "hG5yU321X -= 1\\n"
     returnLine = indent + "return " + "jB2h3dCi1"
@@ -135,7 +134,7 @@ def edit_returns(code, indices):
 # inserts map initialization and count initialization before 
 # the recursive function
 def insert_initializations(code):
-    return mapInitLine + levelsMapInitLine + countInitLine + levelInitLine + levelZeroListInitLine + code
+    return  mapInitLine + levelsMapInitLine + countInitLine + levelInitLine + levelZeroListInitLine + code
 
 
 # goes through the code and inserts the global count declaration, the counter  
@@ -146,7 +145,9 @@ def insert_initializations(code):
 # 
 # the insert looks like this:
 # 
-#    def fun(n, ...):
+#    def fun(arg1, ...):
+#        key = str((arg1, ...))
+# 
 #        global count
 #        count += 1  
 #        temp = count
@@ -155,11 +156,13 @@ def insert_initializations(code):
 #        level += 1
 #        if level+1 not in levelsMap: 
 #            levelsMap[level+1] = []
-#        levelsMap[level].append(n) 
+#        levelsMap[level].append(key) 
 #        ...
 # 
-def insert_globals(code, fnName):
-    # count variable lines
+def insert_globals(code, fnName, params):
+    # key line - converts the param(s) to a string that is used as a key in the call map
+    keyLine = "    v7yG8jN2x = str((" + params + "))\\n\\n"
+    # call count lines
     globalCountLine = "    global b7Hy4dv3A\\n"        
     counterIncLine = "    b7Hy4dv3A += 1\\n"           
     tempInitLine = "    fV42hUijP = b7Hy4dv3A\\n\\n"   
@@ -168,7 +171,7 @@ def insert_globals(code, fnName):
     levelIncLine = "    hG5yU321X += 1\\n"                           
     conditionalMapLine = "    if hG5yU321X+1 not in cFV43ghEo:\\n"   
     listInitLine = "        cFV43ghEo[hG5yU321X+1] = []\\n"          
-    listAppendLine = "    cFV43ghEo[hG5yU321X].append(n)\\n\\n"
+    listAppendLine = "    cFV43ghEo[hG5yU321X].append(v7yG8jN2x)\\n\\n"
 
     header = "\\ndef " + fnName
     n = len(header)
@@ -186,7 +189,7 @@ def insert_globals(code, fnName):
 
     countLines = globalCountLine + counterIncLine + tempInitLine
     levelsMapLines = globalLevelLine + levelIncLine + conditionalMapLine + listInitLine + listAppendLine
-    return start + countLines + levelsMapLines + end
+    return start + keyLine + countLines + levelsMapLines + end
 
 
 # inserts print statement after the function call
@@ -194,19 +197,20 @@ def insert_print_line(code):
     return code + printMapLine
 
 
-        
-
+# setup the code so that we can map all of the function calls to their
+# return value, recursive call arguments, base case boolean variable and 
+# memoization boolean variable
 def setup(code):
     indices = find_returns(code)
     extracts = ex.extract(code)
-    initalArg, fnName = extracts[0], extracts[1]
+    initalArg, fnName, params = extracts[0], extracts[1], extracts[2]
 
     # replace return statement with custom return lines
     code = edit_returns(code, indices)
 
     # make necessary insertions
     code = insert_initializations(code)
-    code = insert_globals(code, fnName)
+    code = insert_globals(code, fnName, params)
     code = insert_print_line(code)
 
     return (code, initalArg)
