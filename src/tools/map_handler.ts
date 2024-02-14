@@ -20,20 +20,17 @@ export default function toMap(responseText: string): Map<string, Call> {
         while (responseText[i+1] != ':' && i < responseText.length-1)
             keyExtract += responseText[i++];
         i += 4;
-        console.log('reached here (1)')
 
         // extract return value
         var returnExtract = "";
         while (responseText[i] != ',' && i < responseText.length)
             returnExtract += responseText[i++];
         i += 4;
-        console.log('reached here (2)')
 
         // extract child arguments
         var childrenExtract = new Array<string>();
         if (responseText[i-1] == ']') {
             i += 2;
-            console.log('reached here (3.1)')
         } else {
             while (i < responseText.length-1) {
                 var childString = "";
@@ -44,14 +41,13 @@ export default function toMap(responseText: string): Map<string, Call> {
                     while (responseText[i+1] != ',' && responseText[i+1] != ']')
                         childString += responseText[i++];
                 }
+                childrenExtract.push(childString);
                 if (responseText[i+1] == ']') 
                     break;
                 else
                     i += 4
-                childrenExtract.push(childString);
             }
             i += 4
-            console.log('reached here (3.2)')
         }
         
 
@@ -64,7 +60,6 @@ export default function toMap(responseText: string): Map<string, Call> {
             isBaseCaseExtract = false;
             i += 7
         }
-        console.log('reached here (4)')
 
         // extract memoization variable
         var isMemoizedExtract
@@ -75,7 +70,6 @@ export default function toMap(responseText: string): Map<string, Call> {
             isMemoizedExtract = false;
             i += 9
         }
-        console.log('reached here (5)')
 
         // create map entry
         map.set(keyExtract, {
