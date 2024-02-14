@@ -12,32 +12,48 @@ import Call from "../interfaces/call";
 */
 export default function toMap(responseText: string): Map<string, Call> {
     var map = new Map<string, Call>();
-    var i = 1;
-    while (i < responseText.length && responseText[i] != '}') {
+    var i = 2; // start at first key
+    while (i < responseText.length) {
 
         // extract key
         var keyExtract = "";
-        while (responseText[i] != ':')
+        while (responseText[i+1] != ':' && i < responseText.length-1)
             keyExtract += responseText[i++];
-        i += 3;
+        i += 4;
+        console.log('reached here (1)')
 
         // extract return value
         var returnExtract = "";
-        while (responseText[i] != ',')
+        while (responseText[i] != ',' && i < responseText.length)
             returnExtract += responseText[i++];
-        i += 3;
+        i += 4;
+        console.log('reached here (2)')
 
         // extract child arguments
         var childrenExtract = new Array<string>();
-        while (responseText[i] != ']') {
-            var childString = "";
-            while (responseText[i] != ',' && responseText[i] != ']')
-                childString += responseText[i++];
-            if (responseText[i] == ',') 
-                i += 2;
-            childrenExtract.push(childString);
+        if (responseText[i-1] == ']') {
+            i += 2;
+            console.log('reached here (3.1)')
+        } else {
+            while (i < responseText.length-1) {
+                var childString = "";
+                if (responseText[i] == '(') {
+                    while (responseText[i-1] != ')')
+                        childString += responseText[i++];
+                } else {
+                    while (responseText[i+1] != ',' && responseText[i+1] != ']')
+                        childString += responseText[i++];
+                }
+                if (responseText[i+1] == ']') 
+                    break;
+                else
+                    i += 4
+                childrenExtract.push(childString);
+            }
+            i += 4
+            console.log('reached here (3.2)')
         }
-        i += 3
+        
 
         // extract base case variable
         var isBaseCaseExtract
@@ -48,16 +64,18 @@ export default function toMap(responseText: string): Map<string, Call> {
             isBaseCaseExtract = false;
             i += 7
         }
+        console.log('reached here (4)')
 
         // extract memoization variable
         var isMemoizedExtract
         if (responseText[i] == 'T') {
             isMemoizedExtract = true;
-            i += 7
+            i += 8
         } else {
             isMemoizedExtract = false;
-            i += 8
+            i += 9
         }
+        console.log('reached here (5)')
 
         // create map entry
         map.set(keyExtract, {

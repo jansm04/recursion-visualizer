@@ -12,7 +12,7 @@ fun() # make sure you call the function`
     });
 
 templates.set("fibonacci", {
-    name: "Fibonacci Sequence",
+    name: "Fibonacci",
     code:
 `def fun(n): # do NOT change this line
     if n == 0 or n == 1:
@@ -23,7 +23,7 @@ fun(5) # make sure you call the function`
 });
 
 templates.set("fibonacci-memo", {
-    name: "Fibonacci Sequence w/ Memoization",
+    name: "Fibonacci w/ Memoization",
     code:
 `memo = {}
 def fun(n): # do NOT change this line

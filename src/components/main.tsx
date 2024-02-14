@@ -15,8 +15,8 @@ import { templates } from "./templates/templates"
 
 const colourScheme = {
     internal: "blue",
-    baseCase: "red",
-    memoized: "red",
+    baseCase: "blue",
+    memoized: "green",
     hovered: "yellow"
 }
 
@@ -161,14 +161,15 @@ const Main = () => {
             if (json.type == 'invalid') {
                 setInvalid(true);
             } else {
+                console.log(json.text);
                 var map = toMap(json.text);
                 map.forEach((value, key) => {
                     console.log(key, value);
                 })
-                var arg = json.arg;
-                isAnimating = true;
-                await visualizeTree(map, arg);
-                isAnimating = false;
+                // var arg = json.arg;
+                // isAnimating = true;
+                // await visualizeTree(map, arg);
+                // isAnimating = false;
             }
         } else {
             setLoading(false);
