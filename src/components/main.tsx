@@ -14,9 +14,9 @@ import Call from "../interfaces/call"
 import { templates } from "./templates/templates"
 
 const colourScheme = {
-    internal: "blue",
-    baseCase: "blue",
-    memoized: "green",
+    internal: "dodgerblue",
+    baseCase: "dodgerblue",
+    memoized: "lime",
     hovered: "yellow"
 }
 
@@ -112,10 +112,15 @@ const Main = () => {
                 var child = map.get(call.children[i]);
                 if (child) {
                     level += 0.2;
-                    var offsetX = gap / Math.pow(level, 4);
-                    var interval = offsetX * 2 / (call.children.length - 1);
-                    var childX = x - offsetX + interval * i;
-                    var childY = y + 100;
+                    if (call.children.length > 1) {
+                        var offsetX = gap / Math.pow(level, 4);
+                        var interval = offsetX * 2 / (call.children.length - 1);
+                        var childX = x - offsetX + interval * i;
+                        var childY = y + 100;
+                    } else {
+                        var childX = x;
+                        var childY = y + 100;
+                    }
                     await traverseNodes(child, call.children[i], childX, childY, level, node);
                     level -= 0.2;
                 }
@@ -166,10 +171,11 @@ const Main = () => {
                 map.forEach((value, key) => {
                     console.log(key, value);
                 })
-                // var arg = json.arg;
-                // isAnimating = true;
-                // await visualizeTree(map, arg);
-                // isAnimating = false;
+                var keys = Array.from(map.keys());
+                var initialArg = keys[keys.length-1];
+                isAnimating = true;
+                await visualizeTree(map, initialArg);
+                isAnimating = false;
             }
         } else {
             setLoading(false);
@@ -185,7 +191,7 @@ const Main = () => {
             if (selectedNode != hovered) {
                 hovered = selectedNode;
                 drawTree();
-                setCallInfo(hovered ? `fun(${hovered.arg}) returns ${hovered.rv}` : "");
+                setCallInfo(hovered ? `fun(${hovered.args}) returns ${hovered.rv}` : "");
             }
         }
     }

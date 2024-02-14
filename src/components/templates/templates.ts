@@ -51,11 +51,25 @@ def fun(n): # do NOT change this line
 fun(3) # make sure you call the function`
 })
 
+templates.set("fast-power", {
+    name: "Fast Power",
+    code: 
+`def fun(a, n): # do NOT change this line
+    if (n == 0):
+        return 1
+    if (n % 2 == 0):
+        return fun(a*a, n/2)
+    return a * fun(a*a, (n-1)/2)
+
+fun(2, 5) # make sure you call the function`
+})
+
 var keys = new Array();
 keys.push("custom");
 keys.push("fibonacci");
 keys.push("fibonacci-memo");
 keys.push("coin-change");
+keys.push("fast-power");
 
 export {
     templates,
