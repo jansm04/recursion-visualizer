@@ -12,64 +12,40 @@ import Call from "../interfaces/call";
 */
 export default function toMap(responseText: string): Map<string, Call> {
     var map = new Map<string, Call>();
-    var i = 2; // start at first key
+    var i = 0; // start at first key
     while (i < responseText.length) {
 
         // extract key
         var keyExtract = "";
-        while (responseText[i+1] != ':' && i < responseText.length-1)
+        while (responseText[i] != '|')
             keyExtract += responseText[i++];
-        i += 4;
+        i++;
 
         // extract return value
         var returnExtract = "";
-        while (responseText[i] != ',' && i < responseText.length)
+        while (responseText[i] != '|')
             returnExtract += responseText[i++];
-        i += 4;
+        i++;
 
-        // extract child arguments
+        // extract children
         var childrenExtract = new Array<string>();
-        if (responseText[i-1] == ']') {
-            i += 2;
-        } else {
-            while (i < responseText.length-1) {
-                var childString = "";
-                if (responseText[i] == '(') {
-                    while (responseText[i-1] != ')')
-                        childString += responseText[i++];
-                } else {
-                    while (responseText[i+1] != ',' && responseText[i+1] != ']')
-                        childString += responseText[i++];
-                }
-                childrenExtract.push(childString);
-                if (responseText[i+1] == ']') 
-                    break;
-                else
-                    i += 4
-            }
-            i += 4
+        while (responseText[i] != '|') {
+            // extract child
+            var childExtract = "";
+            while (responseText[i] != ';')
+                childExtract += responseText[i++];
+            i++;
+            childrenExtract.push(childExtract)
         }
-        
+        i++;
 
-        // extract base case variable
-        var isBaseCaseExtract
-        if (responseText[i] == 'T') {
-            isBaseCaseExtract = true;
-            i += 6
-        } else {
-            isBaseCaseExtract = false;
-            i += 7
-        }
+        // extract base case boolean
+        var isBaseCaseExtract = responseText[i] == 'T';
+        while (responseText[i++] != '|');
 
-        // extract memoization variable
-        var isMemoizedExtract
-        if (responseText[i] == 'T') {
-            isMemoizedExtract = true;
-            i += 8
-        } else {
-            isMemoizedExtract = false;
-            i += 9
-        }
+        // extract memoization boolean
+        var isMemoizedExtract = responseText[i] == 'T';
+        while (responseText[i++] != '|');
 
         // create map entry
         map.set(keyExtract, {
@@ -78,6 +54,7 @@ export default function toMap(responseText: string): Map<string, Call> {
             isBaseCase: isBaseCaseExtract,
             isMemoized: isMemoizedExtract
         });
+        i++;
     }
     return map;
 }
