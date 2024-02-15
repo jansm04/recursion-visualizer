@@ -27,9 +27,6 @@ levelInitLine = "hG5yU321X = -1\\n"
 # levelsMap[level+1] = []
 levelZeroListInitLine = "cFV43ghEo[hG5yU321X+1] = []\\n\\n"
 
-# "print(map)"
-printMapLine = "print(qTY8eDfs9)"
-
 # replaces
 #   return <return_value>
 # with
@@ -192,9 +189,33 @@ def insert_globals(code, fnName, params):
     return start + keyLine + countLines + levelsMapLines + end
 
 
-# inserts print statement after the function call
+# inserts lines to print map as a table
+# the insert looks like this:
+# 
+#     for key in callMap:
+#         children = ""
+#         for child in callMap[key][1]: children += child + ";"
+#         print(key + "|" + str(callMap[key][0]) + "|" + children + "|" + str(callMap[key][2]) + "|" + str(callMap[key][3]) + "|")
+# 
+# this will print a table where each value is seperated using a '|' delimeter.
+# as the child arguments are in an array, they are also seperated by an additional ';' delimeter
+# 
+# for example, if we were to call fun(5) where fun(n) returns the nth fibonacci number,
+# this would be the table printed out:
+# 
+#       1|1||True|False|
+#       0|1||True|False|
+#       2|2|1;0;|False|False|
+#       3|3|2;1;|False|False|
+#       4|5|3;2;|False|False|
+#       5|8|4;3;|False|False|
+# 
 def insert_print_line(code):
-    return code + printMapLine
+    loopLine = "for yG7iJ8s2a in qTY8eDfs9:\n"
+    childrenInitLine = "    children = \"\"\n"
+    childrenAppenderLine = "    for child in qTY8eDfs9[yG7iJ8s2a][1]: children += child + \";\"\n"
+    printMapLine = "    print(yG7iJ8s2a + \"|\" + str(qTY8eDfs9[yG7iJ8s2a][0]) + \"|\" + children + \"|\" + str(qTY8eDfs9[yG7iJ8s2a][2]) + \"|\" + str(qTY8eDfs9[yG7iJ8s2a][3]) + \"|\")\n"
+    return code + loopLine + childrenInitLine + childrenAppenderLine + printMapLine
 
 
 # setup the code so that we can map all of the function calls to their
@@ -203,7 +224,7 @@ def insert_print_line(code):
 def setup(code):
     indices = find_returns(code)
     extracts = ex.extract(code)
-    initalArg, fnName, params = extracts[0], extracts[1], extracts[2]
+    fnName, params = extracts[0], extracts[1]
 
     # replace return statement with custom return lines
     code = edit_returns(code, indices)
@@ -213,4 +234,4 @@ def setup(code):
     code = insert_globals(code, fnName, params)
     code = insert_print_line(code)
 
-    return (code, initalArg)
+    return code

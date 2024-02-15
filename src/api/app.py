@@ -15,15 +15,12 @@ def transform():
     if not result:
         obj = {
             "type": 'invalid', 
-            "text": 'zip', 
-            "arg": 'nada' 
+            "text": 'zip nada'
         }
     else:
-        text, intialArg = result[0], result[1]
         obj = {
             "type": 'valid', 
-            "text": text, 
-            "arg": intialArg 
+            "text": result 
         }
     jsonObject = json.dumps(obj)
     return jsonObject
