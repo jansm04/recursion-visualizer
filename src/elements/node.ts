@@ -1,5 +1,5 @@
 const vertexRadius = 15
-const offset = 4;
+const offset = 5;
 
 class Node {
     x: number;
@@ -20,8 +20,8 @@ class Node {
 
     drawArgument(ctx: CanvasRenderingContext2D, colour: string) {
         if (!this.args) return;
-        ctx.font = "12px Arial";
-        ctx.fillStyle = colour;
+        ctx.font = "13px Arial";
+        ctx.fillStyle = 'white';
         var width = ctx.measureText(this.args).width;
         var x = this.x - width / 2;
         ctx.fillText(this.args, x, this.y + offset);

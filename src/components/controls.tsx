@@ -1,5 +1,5 @@
 import { ChangeEvent, RefObject, useState } from "react"
-import { keys, templates } from "./templates/templates"
+import { templates } from "./templates/templates"
 
 const Controls = ({
     onRunCode,
@@ -15,7 +15,7 @@ const Controls = ({
     isInvalid: boolean
 }) => {
 
-    const [key, setKey] = useState<string>(keys[1]);
+    const [key, setKey] = useState<string>(Array.from(templates.keys())[1]);
 
     function onKeyChange(event: ChangeEvent<HTMLSelectElement>) {
         handleTemplateSelect(event);
@@ -29,10 +29,13 @@ const Controls = ({
             </div>
             <div className="inline-block">
                 <select value={key} className="h-fit w-fit my-2 mr-6 text-gray-900" onChange={onKeyChange}>
-                    {keys.map((key) => (
+                    {Array.from(templates.keys()).map((key) => (
                         <option key={key} value={key}>{templates.get(key).name}</option>
                     ))}
                 </select>
+            </div>
+            <div className="inline-block h-fit w-fit my-2 mx-6 text-gray-400 italic">
+                💡hover over a node to see what the call returns
             </div>
             <div className="inline-block">
                 <button 

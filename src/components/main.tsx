@@ -1,22 +1,19 @@
 'use client'
 import { ChangeEvent, useEffect, useRef, useState } from "react"
-import Header from "./header"
+import { templates } from "./templates/templates"
 import Playground from "./playground"
 import TreeVisualization from "./tree_vis"
 import toMap from "../tools/map_handler"
 import Controls from "./controls"
-
-// elements
 import Node from "../elements/node"
 import Edge from "../elements/edge"
-
 import Call from "../interfaces/call"
-import { templates } from "./templates/templates"
+
 
 const colourScheme = {
-    internal: "dodgerblue",
-    baseCase: "dodgerblue",
-    memoized: "lime",
+    internal: "blue",
+    baseCase: "blue",
+    memoized: "green",
     hovered: "yellow"
 }
 
@@ -27,29 +24,7 @@ var selectedNode: Node | null = null;
 var isAnimating = false;
 
 const Main = () => {
-
-    // var testMap = new Map<number, Call>();
-    // testMap.set(0, {
-    //     rv: 1,
-    //     children: [-1, -2]
-    // });
-    // testMap.set(1, {
-    //     rv: 1,
-    //     children: [0, -1]
-    // });
-    // testMap.set(2, {
-    //     rv: 2,
-    //     children: [1, 0]
-    // });
-    // testMap.set(3, {
-    //     rv: 3,
-    //     children: [2, 1]
-    // });
-    // testMap.set(4, {
-    //     rv: 5,
-    //     children: [3, 2]
-    // });
-        
+            
     const runButtonRef = useRef<HTMLButtonElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -238,7 +213,6 @@ const Main = () => {
 
     return (
         <div>
-            <Header />
             <Playground 
                 code={code} 
                 onCodeChange={handleCodeChange} 
