@@ -6,13 +6,13 @@ const Controls = ({
     handleTemplateSelect,
     runButtonRef,
     isLoading,
-    isInvalid
+    errorMessage
 }:{
     onRunCode: () => void,
     handleTemplateSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
     runButtonRef: RefObject<HTMLButtonElement>,
     isLoading: boolean,
-    isInvalid: boolean
+    errorMessage: string
 }) => {
 
     const [key, setKey] = useState<string>(Array.from(templates.keys())[1]);
@@ -34,7 +34,7 @@ const Controls = ({
                     ))}
                 </select>
             </div>
-            <div className="inline-block h-fit w-fit my-2 mx-6 text-gray-400 italic">
+            <div className="inline-block h-fit w-fit my-2 mx-6 text-gray-400">
                 💡hover over a node to see what the call returns
             </div>
             <div className="inline-block">
@@ -46,7 +46,7 @@ const Controls = ({
                 </button>
             </div>
             { isLoading ? <div className="mx-6 my-2 inline-block">one sec...</div> : <></> }
-            { isInvalid ? <div className="mx-6 my-2 inline-block">fix your code bud</div> : <></> }
+            <div className="mx-6 my-2 inline-block text-red-500 italic">{errorMessage}</div>
         </div>
         
     )

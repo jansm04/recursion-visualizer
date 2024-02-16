@@ -5,7 +5,8 @@ const TreeVisualization = ({
 } : {
     canvasRef: RefObject<HTMLCanvasElement>
 }) => {
-    var height = window.innerHeight - window.innerHeight * 0.07;
+    
+    var height = window.innerHeight - window.innerHeight * 0.3;
     var width = window.innerWidth - window.innerWidth * 0.07;
      
     return (

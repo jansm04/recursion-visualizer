@@ -11,7 +11,7 @@ const Playground = ({
     return (
         <Editor 
             value={code}
-            height="32vh"
+            height="38vh"
             defaultLanguage="python" 
             onChange={onCodeChange}
             theme='vs-dark'

@@ -90,12 +90,10 @@ templates.set("qsort", {
     less, equal, greater = [], [], []
     pivot = array[0]
     for x in array:
-        if x < pivot:
-            less.append(x)
-        elif x == pivot:
-            equal.append(x)
-        elif x > pivot:
-            greater.append(x)
+        if x < pivot: less.append(x)
+        elif x == pivot: equal.append(x)
+        elif x > pivot: greater.append(x)
+
     return qsort(less) + equal + qsort(greater) 
 
 qsort([5, 3, 7, 2, 1, 9, 4, 6, 0, 8]) # make sure to call the function`

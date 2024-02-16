@@ -12,7 +12,7 @@ import Call from "../interfaces/call"
 
 const colourScheme = {
     internal: "blue",
-    baseCase: "blue",
+    baseCase: "purple",
     memoized: "green",
     hovered: "yellow"
 }
@@ -24,13 +24,13 @@ var selectedNode: Node | null = null;
 var isAnimating = false;
 
 const Main = () => {
-            
+
     const runButtonRef = useRef<HTMLButtonElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [code, setCode] = useState<string>(templates.get('fibonacci').code);
     const [loading, setLoading] = useState<boolean>(false);
-    const [invalid, setInvalid] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const [callInfo, setCallInfo] = useState<string>("");
     
     function handleCodeChange(code: string | undefined) {
@@ -67,11 +67,7 @@ const Main = () => {
             var edge = new Edge(parent, node, call.isBaseCase && !call.isMemoized, call.isMemoized && memoized.get(arg));
             nodes.push(node);
             edges.push(edge);
-
-            // colour of nodes
-            node.draw(ctx, getStrokeStyle(node));
-            edge.draw(ctx, getStrokeStyle(edge));
-
+            drawTree();
             await sleep(1000);
 
             // return if function call returns a base case
@@ -127,7 +123,7 @@ const Main = () => {
 
     async function onRunCode() {
         setLoading(true);  
-        setInvalid(false);
+        setErrorMessage("");
         resetCtx();
         resetTree();
         var response = await fetch("http://127.0.0.1:5000/api", {
@@ -138,8 +134,8 @@ const Main = () => {
             var json = await response.json();
             if (!json.text) return;
             setLoading(false);
-            if (json.type == 'invalid') {
-                setInvalid(true);
+            if (!json.type) {
+                setErrorMessage("Error: " + json.text);
             } else {
                 console.log(json.text);
                 var map = toMap(json.text);
@@ -222,7 +218,7 @@ const Main = () => {
                 handleTemplateSelect={handleTemplateSelect}
                 runButtonRef={runButtonRef} 
                 isLoading={loading}
-                isInvalid={invalid}
+                errorMessage={errorMessage}
             />
             <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
             <TreeVisualization  
