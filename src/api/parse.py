@@ -3,5 +3,5 @@ def parseCode(code):
     code = code[2:]
     code = code[:-1]
     # add \n at end of code
-    code = code + "\\n"
+    code = "\\n" + code + "\\n"
     return code

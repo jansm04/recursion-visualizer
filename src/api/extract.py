@@ -30,6 +30,18 @@ def extract_params(code, fnName):
     return params
 
 
+# extracts the text describing the error in the code
+def extract_err_message(errorText):
+    keyword = "NameError: "
+    i, n = 0, len(keyword)
+    while i+n < len(errorText) and errorText[i:i+n] != keyword:
+        i += 1
+    i += n
+    message = errorText[i:-1]
+    print(message)
+    return message
+
+
 def extract(code):
     fnName = extract_fn_name(code)
     params = extract_params(code, fnName)

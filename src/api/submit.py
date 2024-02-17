@@ -4,6 +4,7 @@ import json
 import time
 import parse as pc
 import setup as sp
+import extract as ex
 
 key = config.API_KEY
 
@@ -11,7 +12,7 @@ def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
     querystring = {"fields":"*"}
     
-    code = sp.setup(pc.parseCode(code))
+    code = sp.setup(code)
     code = code.replace("\\n", "\n")
     print(code)
     try:
@@ -29,8 +30,7 @@ def submit(code):
         responseText = json.loads(response.text)
         print(responseText)
     except:
-        print("An error occurred while creating the code submission.")
-        return False
+        return (False, "An error occurred while creating the code submission.")
     
     # wait 1 second before getting result
     time.sleep(1)
@@ -46,10 +46,9 @@ def submit(code):
         status = responseText['status']
         id = status['id']
         if (id != 3):
-            print(responseText)
-            return False
+            message = ex.extract_err_message(responseText['stderr'])
+            return (False, message)
         outputText = responseText['stdout']
-        return outputText
+        return (True, outputText)
     except:
-        print("An error occurred while getting the code submission.")
-        return False
+        return (False, "An error occurred while getting the code submission.")
