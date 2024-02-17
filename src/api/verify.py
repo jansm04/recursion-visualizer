@@ -9,8 +9,6 @@ def verify(code):
     inComment, inString = False, False
     stack = []
 
-    commentCount, stringCount = 0, 0
-
     while i+len(defKeys[0]) < len(code):
 
         # always reset inComment to false at each new line
@@ -22,7 +20,6 @@ def verify(code):
         if (code[i] == '\'' or code[i] == '\"') and (i == 0 or (i > 0 and code[i-1] != '\\')):
             if len(stack) == 0:
                 stack.append(code[i])
-                stringCount += 1
                 inString = True
 
             elif stack[len(stack)-1] == code[i]:
@@ -34,15 +31,12 @@ def verify(code):
                 stack.append(code[i])
 
         if not inString and code[i] == '#':
-            commentCount += 1
             inComment = True
 
         # if we have a valid function definiton
         if not inComment and not inString and (code[i:i+len(defKeys[0])] == defKeys[0] or code[i:i+len(defKeys[1])] == defKeys[1]):
             defCount += 1
             if defCount > 1:
-                print('reached here!!!!!!!!!!!!!!')
-                print(commentCount, stringCount)
                 return (False, "Make sure only one function is defined.")
     
         i += 1

@@ -66,8 +66,34 @@ def find_returns(code):
     n = len(keyword)
     indices = []
     i = 0
+    inComment, inString = False, False
+    stack = []
     while i+n < len(code):
-        if code[i:i+n] == keyword:
+
+        # always reset inComment to false at each new line
+        if code[i:i+2] == '\\n':
+            inComment = False
+
+        # check if we are entering or exiting a string
+        # keep track using a stack
+        if (code[i] == '\'' or code[i] == '\"') and (i == 0 or (i > 0 and code[i-1] != '\\')):
+            if len(stack) == 0:
+                stack.append(code[i])
+                inString = True
+
+            elif stack[len(stack)-1] == code[i]:
+                stack.pop()
+                if len(stack) == 0:
+                    inString = False
+            
+            else:
+                stack.append(code[i])
+
+        # if we are in a comment
+        if not inString and code[i] == '#':
+            inComment = True
+
+        if not inComment and not inString and code[i:i+n] == keyword:
             indices.append(i)
         i += 1
     return indices
