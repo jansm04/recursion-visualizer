@@ -1,13 +1,24 @@
-import { RefObject } from "react"
+import { RefObject, useEffect, useState } from "react"
 
 const TreeVisualization = ({
     canvasRef
 } : {
     canvasRef: RefObject<HTMLCanvasElement>
 }) => {
+
+    const [width, setWidth] = useState<number>(0);
+    const [height, setHeight] = useState<number>(0);
+
+    useEffect(() => {
+        setWidth(Math.round(window.innerWidth * 0.95));
+        setHeight(Math.round(window.innerHeight * 0.8));
+    })
+
+    window.onresize = () => {
+        setWidth(Math.round(window.innerWidth * 0.95));
+        setHeight(Math.round(window.innerHeight * 0.8));
+    }
     
-    var height = window.innerHeight - window.innerHeight * 0.3;
-    var width = window.innerWidth - window.innerWidth * 0.07;
      
     return (
         <div className="text-center">
