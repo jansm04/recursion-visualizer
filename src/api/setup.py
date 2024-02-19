@@ -1,4 +1,5 @@
 import extract as ex
+import check as ck
 
 # "callMap = {}\\n"
 # maps parameter to node
@@ -70,28 +71,9 @@ def find_returns(code):
     stack = []
     while i+n < len(code):
 
-        # always reset inComment to false at each new line
-        if code[i:i+2] == '\\n':
-            inComment = False
-
-        # check if we are entering or exiting a string
-        # keep track using a stack
-        if (code[i] == '\'' or code[i] == '\"') and (i == 0 or (i > 0 and code[i-1] != '\\')):
-            if len(stack) == 0:
-                stack.append(code[i])
-                inString = True
-
-            elif stack[len(stack)-1] == code[i]:
-                stack.pop()
-                if len(stack) == 0:
-                    inString = False
-            
-            else:
-                stack.append(code[i])
-
-        # if we are in a comment
-        if not inString and code[i] == '#':
-            inComment = True
+        # handle comments and strings
+        result = ck.checkCodeAtIdx(code, i, inComment, inString, stack)
+        inComment, inString, stack = result[0], result[1], result[2]
 
         if not inComment and not inString and code[i:i+n] == keyword:
             indices.append(i)

@@ -1,9 +1,19 @@
+import check as ck
+
 # extracts the function name from the function header
 def extract_fn_name(code):
     fnName, keyword = "", "def "
     i, keyword_len = 0, len(keyword)
+    inComment, inString = False, False
+    stack = []
+
     while i < len(code):
-        if (code[i:i+keyword_len] == keyword):
+
+        # handle comments and strings
+        result = ck.checkCodeAtIdx(code, i, inComment, inString, stack)
+        inComment, inString, stack = result[0], result[1], result[2]
+
+        if not inComment and not inString and code[i:i+keyword_len] == keyword:
             break
         i += 1
 
