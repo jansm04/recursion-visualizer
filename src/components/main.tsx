@@ -8,6 +8,7 @@ import Controls from "./controls"
 import Node from "../elements/node"
 import Edge from "../elements/edge"
 import Call from "../interfaces/call"
+import Instructions from "./instructions"
 
 
 const colourScheme = {
@@ -209,10 +210,14 @@ const Main = () => {
 
     return (
         <div>
-            <Playground 
-                code={code} 
-                onCodeChange={handleCodeChange} 
-            />
+            <div>
+                <Playground 
+                    code={code} 
+                    onCodeChange={handleCodeChange} 
+                />
+                <Instructions />
+            </div>
+            
             <Controls 
                 onRunCode={onRunCode} 
                 handleTemplateSelect={handleTemplateSelect}

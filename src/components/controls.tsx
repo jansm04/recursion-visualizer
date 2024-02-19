@@ -34,9 +34,6 @@ const Controls = ({
                     ))}
                 </select>
             </div>
-            <div className="inline-block h-fit w-fit my-2 mx-6 text-gray-400">
-                💡hover over a node to see what the call returns
-            </div>
             <div className="inline-block">
                 <button 
                     ref={runButtonRef}
