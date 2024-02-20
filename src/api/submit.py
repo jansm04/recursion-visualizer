@@ -30,7 +30,7 @@ def submit(code):
         responseText = json.loads(response.text)
         print(responseText)
     except:
-        return (False, "An error occurred while creating the code submission.")
+        return (False, "A problem occurred while creating the code submission.")
     
     # wait 1 second before getting result
     time.sleep(1)
@@ -49,6 +49,8 @@ def submit(code):
             message = ex.extract_err_message(responseText['stderr'])
             return (False, message)
         outputText = responseText['stdout']
+        if 'h6Bv1yO2n' in outputText:
+            return (False, "Too much recursion! Try a lower argument.")
         return (True, outputText)
     except:
-        return (False, "An error occurred while getting the code submission.")
+        return (False, "A problem occurred while getting the code submission.")

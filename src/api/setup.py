@@ -161,7 +161,9 @@ def insert_initializations(code):
 #        level += 1
 #        if level+1 not in levelsMap: 
 #            levelsMap[level+1] = []
-#        levelsMap[level].append(key) 
+#        levelsMap[level].append(key)
+# 
+#        if level > 6: print('invalid')
 #        ...
 # 
 def insert_globals(code, fnName, params):
@@ -177,6 +179,8 @@ def insert_globals(code, fnName, params):
     conditionalMapLine = "    if hG5yU321X+1 not in cFV43ghEo:\\n"   
     listInitLine = "        cFV43ghEo[hG5yU321X+1] = []\\n"          
     listAppendLine = "    cFV43ghEo[hG5yU321X].append(v7yG8jN2x)\\n\\n"
+    # depth checker
+    depthCheckLine = "    if hG5yU321X > 6: print('h6Bv1yO2n')\\n\\n"
 
     header = "\\ndef " + fnName
     n = len(header)
@@ -194,7 +198,7 @@ def insert_globals(code, fnName, params):
 
     countLines = globalCountLine + counterIncLine + tempInitLine
     levelsMapLines = globalLevelLine + levelIncLine + conditionalMapLine + listInitLine + listAppendLine
-    return start + keyLine + countLines + levelsMapLines + end
+    return start + keyLine + countLines + levelsMapLines + depthCheckLine + end
 
 
 # inserts lines to print map as a table

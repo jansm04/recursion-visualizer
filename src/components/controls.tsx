@@ -43,7 +43,7 @@ const Controls = ({
                 </button>
             </div>
             { isLoading ? <div className="mx-6 my-2 inline-block">one sec...</div> : <></> }
-            <div className="mx-6 my-2 inline-block text-red-500 italic">{errorMessage}</div>
+            <div className="mx-6 my-2 inline-block text-red-500">{errorMessage}</div>
         </div>
         
     )

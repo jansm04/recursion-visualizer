@@ -11,12 +11,12 @@ const TreeVisualization = ({
 
     useEffect(() => {
         setWidth(Math.round(window.innerWidth * 0.95));
-        setHeight(Math.round(window.innerHeight * 0.8));
+        setHeight(Math.round(window.innerHeight * 0.9));
     })
 
     window.onresize = () => {
         setWidth(Math.round(window.innerWidth * 0.95));
-        setHeight(Math.round(window.innerHeight * 0.8));
+        setHeight(Math.round(window.innerHeight * 0.9));
     }
     
      
