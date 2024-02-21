@@ -7,23 +7,24 @@ const TreeVisualization = ({
 }) => {
 
     const [width, setWidth] = useState<number>(0);
-    const [height, setHeight] = useState<number>(0);
 
     useEffect(() => {
-        setWidth(Math.round(window.innerWidth * 0.95));
-        setHeight(Math.round(window.innerHeight * 0.9));
+        if (window) {
+            setWidth(Math.round(window.innerWidth * 0.95));
+            window.onresize = () => {    
+                setWidth(Math.round(window.innerWidth * 0.95));
+            }
+        }
     })
 
-    window.onresize = () => {
-        setWidth(Math.round(window.innerWidth * 0.95));
-        setHeight(Math.round(window.innerHeight * 0.9));
-    }
+    
+    
     
      
     return (
         <div className="text-center">
             <canvas  
-            height={height}
+            height={700}
             width={width}
             ref={canvasRef}
             className="outline-none bg-[#1e1e1e] select-none"
