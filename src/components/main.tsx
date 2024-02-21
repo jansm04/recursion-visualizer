@@ -129,6 +129,7 @@ const Main = () => {
         resetTree();
         var response = await fetch("http://jansm04.pythonanywhere.com", {
             method: "POST",
+            mode: 'cors',
             body: code
         })
         if (response.ok) {
