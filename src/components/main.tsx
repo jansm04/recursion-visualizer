@@ -127,7 +127,7 @@ const Main = () => {
         setErrorMessage("");
         resetCtx();
         resetTree();
-        var response = await fetch("http://jansm04.pythonanywhere.com", {
+        var response = await fetch("https://jansm04.pythonanywhere.com", {
             method: "POST",
             mode: 'cors',
             body: code
