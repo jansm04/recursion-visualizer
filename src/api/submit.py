@@ -49,6 +49,9 @@ def submit(code):
             message = ex.extract_err_message(responseText['stderr'])
             return (False, message)
         outputText = responseText['stdout']
+        print(outputText)
+        if 'j7Kbx9p1s' in outputText:
+            return (False, "Please don't try an infinite loop...")
         if 'h6Bv1yO2n' in outputText:
             return (False, "Too much recursion! Try a lower argument.")
         return (True, outputText)

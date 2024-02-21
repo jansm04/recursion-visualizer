@@ -181,6 +181,10 @@ def insert_globals(code, fnName, params):
     listAppendLine = "    cFV43ghEo[hG5yU321X].append(v7yG8jN2x)\\n\\n"
     # depth checker
     depthCheckLine = "    if hG5yU321X > 6: print('h6Bv1yO2n')\\n\\n"
+    # infinite loop checker
+    infLoopCheckLine = "    if b7Hy4dv3A > 100:\\n"
+    infLoopPrintLine = "        print('j7Kbx9p1s')\\n"
+    emptyReturnLine = "        return\\n\\n"
 
     header = "\\ndef " + fnName
     n = len(header)
@@ -198,7 +202,8 @@ def insert_globals(code, fnName, params):
 
     countLines = globalCountLine + counterIncLine + tempInitLine
     levelsMapLines = globalLevelLine + levelIncLine + conditionalMapLine + listInitLine + listAppendLine
-    return start + keyLine + countLines + levelsMapLines + depthCheckLine + end
+    infLoopCheckLines = infLoopCheckLine + infLoopPrintLine + emptyReturnLine
+    return start + keyLine + countLines + levelsMapLines + depthCheckLine + infLoopCheckLines + end
 
 
 # inserts lines to print map as a table

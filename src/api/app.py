@@ -18,7 +18,6 @@ def transform():
     if isValid:
         result = sb.submit(code)
         isAccepted, text = result[0], result[1]
-        print(text)
         obj = {
             "type": isAccepted, 
             "text": text 
