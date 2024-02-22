@@ -55,7 +55,7 @@ templates.set("coin-change", {
     code:
 `# given a set of coins, what is the minimum 
 # number coins required to sum up to n cents
-coins = [1,3,4,5]
+coins = [1,2,3]
 def fun(n):
     if (n == 0): return 0
     if (n < 0): return float('inf')
@@ -64,8 +64,28 @@ def fun(n):
         ans = min(ans, 1 + fun(n - coin))
     return ans
 
-fun(3) # make sure you call the function`
+fun(4) # make sure you call the function`
 });
+
+templates.set("coin-change-memo", {
+    name: "Coin Change w/ Memoization",
+    code:
+`# given a set of coins, what is the minimum 
+# number coins required to sum up to n cents
+coins = [1,2,3]
+memo = {}
+def fun(n):
+    if (n == 0): return 0
+    if (n < 0): return float('inf')
+    if n not in memo:
+        ans = float('inf')
+        for coin in coins:
+            ans = min(ans, 1 + fun(n - coin))
+        memo[n] = ans
+    return memo[n]
+
+fun(4) # make sure you call the function`
+})
 
 templates.set("fast-power", {
     name: "Fast Power",

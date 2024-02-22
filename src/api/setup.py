@@ -40,7 +40,7 @@ levelZeroListInitLine = "cFV43ghEo[hG5yU321X+1] = []\\n\\n"
 #   return a
 def insert_return_lines(code, rv, indent, start, end):
     tempVarLine = indent + "jB2h3dCi1 = " + rv + "\\n"
-    memoLine = indent + "d4fHj8KaC = v7yG8jN2x in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and not qTY8eDfs9[v7yG8jN2x][2]\\n"
+    memoLine = indent + "d4fHj8KaC = v7yG8jN2x in qTY8eDfs9 and fV42hUijP == b7Hy4dv3A and (not qTY8eDfs9[v7yG8jN2x][2] or qTY8eDfs9[v7yG8jN2x][3])\\n"
     childArgsLine = indent + "hV4g09iPs = cFV43ghEo[hG5yU321X+1] if v7yG8jN2x not in qTY8eDfs9 else qTY8eDfs9[v7yG8jN2x][1]\\n"
     callMapLine = indent + "qTY8eDfs9[v7yG8jN2x] = (jB2h3dCi1, hV4g09iPs, fV42hUijP == b7Hy4dv3A, d4fHj8KaC)\\n"
     levelsMapLine = indent + "cFV43ghEo[hG5yU321X+1] = []\\n"
