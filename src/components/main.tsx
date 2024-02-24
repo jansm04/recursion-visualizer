@@ -2,7 +2,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { templates } from "./templates/templates"
 import Playground from "./playground"
-import TreeVisualization from "./tree_vis"
+import TreeVisualization from "./visualizer"
 import toMap from "../tools/map_handler"
 import Controls from "./controls"
 import Node from "../elements/node"
@@ -127,6 +127,7 @@ const Main = () => {
         setErrorMessage("");
         resetCtx();
         resetTree();
+        // send code to backend
         var response = await fetch("https://jansm04.pythonanywhere.com", {
             method: "POST",
             mode: 'cors',
