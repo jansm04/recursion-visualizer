@@ -26,21 +26,21 @@ var isAnimating = false;
 
 const Main = () => {
 
-    const runButtonRef = useRef<HTMLButtonElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [code, setCode] = useState<string>(templates.get('fibonacci').code);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [callInfo, setCallInfo] = useState<string>("");
+    const [speed, setSpeed] = useState<number>(100); // 300 ms per interval
     
     function handleCodeChange(code: string | undefined) {
         if (!code) return;
         setCode(code);
     }
 
-    function sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    function sleep() {
+        return new Promise(resolve => setTimeout(resolve, speed));
     }
 
     function resetCtx() {
@@ -69,7 +69,7 @@ const Main = () => {
             nodes.push(node);
             edges.push(edge);
             drawTree();
-            await sleep(1000);
+            await sleep();
 
             // return if function call returns a base case
             if (call.isBaseCase && !call.isMemoized) return;
@@ -201,6 +201,14 @@ const Main = () => {
         return colourScheme.internal;
     }
 
+    function onDecreaseSpeed() {
+        if (!isAnimating && speed < 1000) setSpeed(() => speed + 100);
+    }
+
+    function onIncreaseSpeed() {
+        if (!isAnimating && speed > 100) setSpeed(() => speed - 100);
+    }
+
     useEffect(() => {
         var canvas = canvasRef.current;
         canvas?.addEventListener('mousemove', onMouseMove);
@@ -223,9 +231,11 @@ const Main = () => {
             <Controls 
                 onRunCode={onRunCode} 
                 handleTemplateSelect={handleTemplateSelect}
-                runButtonRef={runButtonRef} 
                 isLoading={loading}
                 errorMessage={errorMessage}
+                onDecreaseSpeed={onDecreaseSpeed}
+                onIncreaseSpeed={onIncreaseSpeed}
+                speed={speed}
             />
             <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
             <TreeVisualization  
