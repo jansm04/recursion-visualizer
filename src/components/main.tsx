@@ -202,11 +202,11 @@ const Main = () => {
     }
 
     function onDecreaseSpeed() {
-        if (!isAnimating && speed < 1000) setSpeed(() => speed + 100);
+        if (!isAnimating && speed < 1000) setSpeed((prev) => prev + 100);
     }
 
     function onIncreaseSpeed() {
-        if (!isAnimating && speed > 100) setSpeed(() => speed - 100);
+        if (!isAnimating && speed > 100) setSpeed((prev) => prev - 100);
     }
 
     useEffect(() => {
@@ -230,11 +230,11 @@ const Main = () => {
             
             <Controls 
                 onRunCode={onRunCode} 
+                onDecreaseSpeed={onDecreaseSpeed}
+                onIncreaseSpeed={onIncreaseSpeed}
                 handleTemplateSelect={handleTemplateSelect}
                 isLoading={loading}
                 errorMessage={errorMessage}
-                onDecreaseSpeed={onDecreaseSpeed}
-                onIncreaseSpeed={onIncreaseSpeed}
                 speed={speed}
             />
             <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
