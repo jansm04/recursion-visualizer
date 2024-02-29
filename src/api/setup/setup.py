@@ -1,5 +1,5 @@
-import extract as ex
-import check as ck
+import api.setup.extract as ex
+import api.setup.check as ck
 
 # "callMap = {}\\n"
 # maps parameter to node
@@ -32,7 +32,7 @@ levelZeroListInitLine = "cFV43ghEo[hG5yU321X+1] = []\\n\\n"
 #   return <return_value>
 # with
 #   a = <return_value>
-#   isMemoized = key in callMap and temp == count and not callMap[key][2]
+#   isMemoized = key in callMap and temp == count and (not callMap[key][2] or callMap[key][3])
 #   childArgs = levelsMap[level+1] if key not in callMap else callMap[key][1] -- so memoization can't override
 #   callMap[key] = (a, childArgs, temp == count, isMemoized)
 #   levelsMap[level+1] = []
@@ -163,7 +163,11 @@ def insert_initializations(code):
 #            levelsMap[level+1] = []
 #        levelsMap[level].append(key)
 # 
-#        if level > 6: print('invalid')
+#        if level > 8: print('invalid')
+# 
+#        if count > 100:
+#            print('infiniteloop')
+#            return
 #        ...
 # 
 def insert_globals(code, fnName, params):
@@ -180,7 +184,7 @@ def insert_globals(code, fnName, params):
     listInitLine = "        cFV43ghEo[hG5yU321X+1] = []\\n"          
     listAppendLine = "    cFV43ghEo[hG5yU321X].append(v7yG8jN2x)\\n\\n"
     # depth checker
-    depthCheckLine = "    if hG5yU321X > 6: print('h6Bv1yO2n')\\n\\n"
+    depthCheckLine = "    if hG5yU321X > 8: print('h6Bv1yO2n')\\n\\n"
     # infinite loop checker
     infLoopCheckLine = "    if b7Hy4dv3A > 100:\\n"
     infLoopPrintLine = "        print('j7Kbx9p1s')\\n"

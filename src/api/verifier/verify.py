@@ -1,4 +1,4 @@
-import check as ck
+import api.setup.check as ck
 
 # goes through the code and makes sure there aren't any issues
 def verify(code):

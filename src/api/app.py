@@ -1,9 +1,9 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-import submit as sb
-import verify as vf
-import parse as pc
+import api.runner.submit as sb
+import api.verifier.verify as vf
+import api.setup.parse as pc
 import json
 
 app = Flask(__name__)

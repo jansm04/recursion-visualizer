@@ -1,4 +1,4 @@
-import check as ck
+import api.setup.check as ck
 
 # extracts the function name from the function header
 def extract_fn_name(code):

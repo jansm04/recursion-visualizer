@@ -2,9 +2,9 @@ import config
 import requests
 import json
 import time
-import parse as pc
-import setup as sp
-import extract as ex
+import api.setup.parse as pc
+import api.setup.setup as sp
+import api.setup.extract as ex
 
 key = config.API_KEY
 
