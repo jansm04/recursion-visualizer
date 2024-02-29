@@ -1,21 +1,29 @@
-const vertexRadius = 15
+import Edge from "../edge/edge";
+import { nodeRadius } from "./radius";
+
 const offset = 5;
 
 class Node {
     x: number;
     y: number;
+    width: number;
     args: string;
     rv: string;
     isBaseCase: boolean;
     isMemoized: boolean;
+    children: Node[];
+    leadingEdge: Edge | null; // the edge pointing towards the node
     
-    constructor(x: number, y: number, args: string, rv: string, isBaseCase: boolean, isMemoized: boolean) {
-        this.x = x;
-        this.y = y;
+    constructor(args: string, rv: string, isBaseCase: boolean, isMemoized: boolean) {
+        this.x = -1;
+        this.y = -1;
+        this.width = -1;
         this.args = this.parseArguments(args);
         this.rv = rv;
         this.isBaseCase = isBaseCase;
         this.isMemoized = isMemoized;
+        this.children = [];
+        this.leadingEdge = null;
     }
 
     drawArgument(ctx: CanvasRenderingContext2D, colour: string) {
@@ -30,7 +38,7 @@ class Node {
     draw(ctx: CanvasRenderingContext2D, colour: string) {
         ctx.strokeStyle = colour;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
+        ctx.arc(this.x, this.y, nodeRadius, 0, 2 * Math.PI);
         ctx.stroke();
         this.drawArgument(ctx, colour);
     }
@@ -40,13 +48,13 @@ class Node {
         var distY = y - this.y;
         var dist = Math.sqrt(distX * distX + distY * distY);
         
-        var px = this.x + distX * vertexRadius / dist;
-        var py = this.y + distY * vertexRadius / dist;
+        var px = this.x + distX * nodeRadius / dist;
+        var py = this.y + distY * nodeRadius / dist;
         return {px, py};
     }
 
     containsPoint(x: number, y: number) {
-        return vertexRadius*vertexRadius > (x - this.x)*(x - this.x) + (y - this.y)*(y - this.y);
+        return nodeRadius*nodeRadius > (x - this.x)*(x - this.x) + (y - this.y)*(y - this.y);
     }
 
     parseArguments(rawArgs: string) {

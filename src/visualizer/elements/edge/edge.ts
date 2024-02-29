@@ -1,4 +1,4 @@
-import Node from "../elements/node"
+import Node from "../node/node"
 
 class Edge {
     parent: Node | null;

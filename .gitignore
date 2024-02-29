@@ -40,3 +40,6 @@ virtual
 
 # config
 config.py
+
+# test
+test.py

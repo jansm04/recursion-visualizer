@@ -1,4 +1,4 @@
-import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 
 const Playground = ({
     code,
@@ -12,7 +12,7 @@ const Playground = ({
         <div className='inline-block w-[55vw] sm:w-full'>
             <Editor 
                 value={code}
-                height="38vh"
+                height="40vh"
                 defaultLanguage="python" 
                 onChange={onCodeChange}
                 theme='vs-dark'

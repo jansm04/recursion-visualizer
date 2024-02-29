@@ -36,6 +36,18 @@ def fun(n):
 fun(5) # make sure you call the function`
 });
 
+templates.set("factorial", {
+    name: "Factorial",
+    code: 
+`def fact(n):
+    if n == 0:
+        return 1
+
+    return n * fact(n-1)
+
+fact(5) # make sure you call the function`
+})
+
 templates.set("binomial-coefficient", {
     name: "Binomial Coefficient", 
     code: 

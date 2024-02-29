@@ -1,25 +1,24 @@
 'use client'
 import { ChangeEvent, useEffect, useRef, useState } from "react"
-import { templates } from "./templates/templates"
-import Playground from "./playground"
-import TreeVisualization from "./visualizer"
+import { templates } from "./form/templates/templates"
 import toMap from "../tools/map_handler"
-import Controls from "./controls"
-import Node from "../elements/node"
-import Edge from "../elements/edge"
-import Call from "../interfaces/call"
-import Instructions from "./instructions"
+import Playground from "./editor/playground"
+import TreeVisualization from "./tree/visualization"
+import Controls from "./form/controls"
+import Instructions from "./editor/instructions"
+import CallInfo from "./tree/call_info"
 
+// visualizer
+import createUnpositionedTree from "../visualizer/steps/initial_tree"
+import createPositionedTree from "../visualizer/steps/final_tree"
+import visualizeTree from "../visualizer/visualizer"
+import { drawTree, resetCtx } from "../visualizer/draw/draw_tree"
+import Node from "../visualizer/elements/node/node"
+import Edge from "../visualizer/elements/edge/edge"
 
-const colourScheme = {
-    internal: "blue",
-    baseCase: "purple",
-    memoized: "green",
-    hovered: "yellow"
-}
+var nodes: Node[] = [];
+var edges: Edge[] = [];
 
-var nodes = new Array<Node>();
-var edges = new Array<Edge>();
 var hovered: Node | null = null;
 var selectedNode: Node | null = null;
 var isAnimating = false;
@@ -27,106 +26,24 @@ var isAnimating = false;
 const Main = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const rootNode = useRef<Node>();
 
     const [code, setCode] = useState<string>(templates.get('fibonacci').code);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [callInfo, setCallInfo] = useState<string>("");
-    const [speed, setSpeed] = useState<number>(100); // 300 ms per interval
+    const [speed, setSpeed] = useState<number>(100); // default: 100 ms per interval
+
     
     function handleCodeChange(code: string | undefined) {
         if (!code) return;
         setCode(code);
     }
 
-    function sleep() {
-        return new Promise(resolve => setTimeout(resolve, speed));
-    }
-
-    function resetCtx() {
-        var canvas = canvasRef.current;
-        if (!canvas) return;
-        var ctx = canvas.getContext("2d");
-        var rect = canvas.getBoundingClientRect();
-        if (!ctx || !rect) return;
-        ctx.clearRect(0, 0, rect.width, rect.height);
-        return ctx;
-    }
-
-    async function visualizeTree(map: Map<string, Call>, arg: string) {
-        var ctx = resetCtx();
-        if (!ctx) return;
-        ctx.lineWidth = 3;
-        var front = map.get(arg);
-        if (!front) return;
-
-        var memoized = new Map();
-
-        async function traverseNodes(call: Call, arg: string, x: number, y: number, level: number, parent: Node | null) {
-            if (!call || !ctx) return;
-            var node = new Node(x, y, arg, call.rv, call.isBaseCase && !call.isMemoized, call.isMemoized && memoized.get(arg));
-            var edge = new Edge(parent, node, call.isBaseCase && !call.isMemoized, call.isMemoized && memoized.get(arg));
-            nodes.push(node);
-            edges.push(edge);
-            drawTree();
-            await sleep();
-
-            // return if function call returns a base case
-            if (call.isBaseCase && !call.isMemoized) return;
-
-            if (call.isMemoized) {
-                if (memoized.get(arg)) return; // return if function call returns a memoized argument
-                else memoized.set(arg, true); // memoize argument
-            }
-
-            var gap = window.innerWidth * 0.1;
-            for (let i = 0; i < call.children.length; i++) {
-                var child = map.get(call.children[i]);
-                if (child) {
-                    level += 0.2;
-                    if (call.children.length > 1) {
-                        var offsetX = gap / Math.pow(level, 4);
-                        var interval = offsetX * 2 / (call.children.length - 1);
-                        var childX = x - offsetX + interval * i;
-                        var childY = y + 100;
-                    } else {
-                        var childX = x;
-                        var childY = y + 100;
-                    }
-                    await traverseNodes(child, call.children[i], childX, childY, level, node);
-                    level -= 0.2;
-                }
-            }        
-        }
-        await traverseNodes(front, arg, window.innerWidth / 2, 60, 0.6, null);
-    }
-
-    function drawTree() {
-        var ctx = canvasRef.current?.getContext("2d");
-        var rect = canvasRef.current?.getBoundingClientRect();
-
-        if (!ctx || !rect) return;
-        ctx.clearRect(0, 0, rect.width, rect.height);
-        ctx.lineWidth = 3;
-        
-        for (let i = 0; i < edges.length; i++) {
-            edges[i].draw(ctx, getStrokeStyle(edges[i]));
-        }
-        for (let i = 0; i < nodes.length; i++) {
-            nodes[i].draw(ctx, getStrokeStyle(nodes[i]));
-        }
-    }
-
-    function resetTree() {
-        nodes = new Array<Node>();
-        edges = new Array<Edge>();
-    }
-
     async function onRunCode() {
         setLoading(true);  
         setErrorMessage("");
-        resetCtx();
-        resetTree();
+        resetCtx(canvasRef);
         // send code to backend
         var response = await fetch("https://jansm04.pythonanywhere.com", {
             method: "POST",
@@ -140,15 +57,17 @@ const Main = () => {
             if (!json.type) {
                 setErrorMessage("Error: " + json.text);
             } else {
-                console.log(json.text);
                 var map = toMap(json.text);
-                map.forEach((value, key) => {
-                    console.log(key, value);
-                })
                 var keys = Array.from(map.keys());
-                var initialArg = keys[keys.length-1];
+                var initialArg = keys[keys.length-1]; // root argument will be last key
                 isAnimating = true;
-                await visualizeTree(map, initialArg);
+                rootNode.current = createUnpositionedTree(map, initialArg);
+                createPositionedTree(rootNode.current);
+                var tree = await visualizeTree(canvasRef, speed, rootNode.current);
+                if (tree) {
+                    nodes = tree.nodes;
+                    edges = tree.edges;
+                }
                 isAnimating = false;
             }
         } else {
@@ -164,7 +83,7 @@ const Main = () => {
             selectedNode = selectNode(point.x, point.y);
             if (selectedNode != hovered) {
                 hovered = selectedNode;
-                drawTree();
+                drawTree(canvasRef, nodes, edges, hovered);
                 setCallInfo(hovered ? `fun(${hovered.args}) returns ${hovered.rv}` : "");
             }
         }
@@ -189,16 +108,6 @@ const Main = () => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         return {x, y};
-    }
-
-    function getStrokeStyle(element: Node | Edge) {
-        if (element instanceof Node && hovered == element)
-            return colourScheme.hovered;
-        if (element.isBaseCase && !element.isMemoized)
-            return colourScheme.baseCase;
-        if (element.isMemoized)
-            return colourScheme.memoized;
-        return colourScheme.internal;
     }
 
     function onDecreaseSpeed() {
@@ -237,7 +146,7 @@ const Main = () => {
                 errorMessage={errorMessage}
                 speed={speed}
             />
-            <div className="h-10 p-2 text-center bg-[#1e1e1e]">{callInfo}</div>
+            <CallInfo log={callInfo} />
             <TreeVisualization  
                 canvasRef={canvasRef}
             />

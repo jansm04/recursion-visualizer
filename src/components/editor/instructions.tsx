@@ -1,6 +1,6 @@
 const Instructions = () => {
     return (
-        <div className="inline-block m-4 align-top">
+        <div className="inline-block mb-4 align-top">
             <h1 className="text-gray-300 text-md mt-2">Instructions💡</h1>
             <div className="text-gray-400">
                 <p>&nbsp; • choose a recursive function from the templates, or write your own</p>
