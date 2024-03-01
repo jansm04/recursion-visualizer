@@ -1,7 +1,5 @@
 import Edge from "../edge/edge";
-import { nodeRadius } from "./radius";
-
-const offset = 5;
+import { nodeRadius, offset } from "./constants";
 
 class Node {
     x: number;

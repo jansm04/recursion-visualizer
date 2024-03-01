@@ -1,7 +1,7 @@
 import Call from "@/src/interfaces/call";
 import Edge from "../elements/edge/edge";
 import Node from "../elements/node/node";
-import { nodeRadius } from "../elements/node/radius";
+import { nodeRadius } from "../elements/node/constants";
 
 function useRadiusAsWidth(node: Node) {
     const gapBetweenAdjacentNodes = 4;

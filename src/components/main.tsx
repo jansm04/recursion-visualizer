@@ -45,11 +45,16 @@ const Main = () => {
         setErrorMessage("");
         resetCtx(canvasRef);
         // send code to backend
+        
         var response = await fetch("https://jansm04.pythonanywhere.com", {
             method: "POST",
             mode: 'cors',
             body: code
         })
+        // var response = await fetch("http://127.0.0.1:5000", {
+        //     method: "POST",
+        //     body: code
+        // })
         if (response.ok) {
             var json = await response.json();
             if (!json.text) return;

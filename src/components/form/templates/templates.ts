@@ -96,7 +96,7 @@ def fun(n):
         memo[n] = ans
     return memo[n]
 
-fun(4) # make sure you call the function`
+fun(7) # make sure you call the function`
 })
 
 templates.set("fast-power", {

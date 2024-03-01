@@ -20,7 +20,7 @@ const TreeVisualization = ({
     return (
         <div className="text-center">
             <canvas  
-                height={700}
+                height={720}
                 width={width}
                 ref={canvasRef}
                 className="outline-none bg-[#1e1e1e] select-none"

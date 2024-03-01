@@ -1,5 +1,5 @@
-import api.setup.extract as ex
-import api.setup.check as ck
+import extract as ex
+import check as ck
 
 # "callMap = {}\\n"
 # maps parameter to node

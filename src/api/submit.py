@@ -2,9 +2,8 @@ import config
 import requests
 import json
 import time
-import api.setup.parse as pc
-import api.setup.setup as sp
-import api.setup.extract as ex
+import setup as sp
+import extract as ex
 
 key = config.API_KEY
 
@@ -43,17 +42,31 @@ def submit(code):
         }
         response = requests.get(url, headers=headers, params=querystring)
         responseText = json.loads(response.text)
+        print(responseText)
         status = responseText['status']
         id = status['id']
-        if (id != 3):
+
+        # if code execution exceeds time limit
+        if id == 11:
+            return (False, "Time limit exceeded! Try a lower argument.")
+        
+        # if any other error occurred
+        if id != 3:
             message = ex.extract_err_message(responseText['stderr'])
             return (False, message)
+        
         outputText = responseText['stdout']
+        print("Size of text: " + str(len(outputText)))
         print(outputText)
+
+        # if function had to be returned manually
         if 'j7Kbx9p1s' in outputText:
             return (False, "Please don't try an infinite loop...")
+        
+        # if function went down too many levels
         if 'h6Bv1yO2n' in outputText:
             return (False, "Too much recursion! Try a lower argument.")
+        
         return (True, outputText)
     except:
         return (False, "A problem occurred while getting the code submission.")

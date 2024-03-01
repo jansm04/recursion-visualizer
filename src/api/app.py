@@ -1,15 +1,15 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-import api.runner.submit as sb
-import api.verifier.verify as vf
-import api.setup.parse as pc
+import submit as sb
+import verify as vf
+import parse as pc
 import json
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api', methods=['POST'])
+@app.route('/', methods=['POST'])
 def transform():
     body = str(request.data)
     code = pc.parseCode(body)
