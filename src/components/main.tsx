@@ -6,7 +6,7 @@ import Playground from "./editor/playground"
 import TreeVisualization from "./tree/visualization"
 import Controls from "./form/controls"
 import Instructions from "./editor/instructions"
-import CallInfo from "./tree/call_info"
+import LogLine from "./tree/logline"
 
 // visualizer
 import createUnpositionedTree from "../visualizer/steps/initial_tree"
@@ -46,15 +46,15 @@ const Main = () => {
         resetCtx(canvasRef);
         // send code to backend
         
-        var response = await fetch("https://jansm04.pythonanywhere.com", {
-            method: "POST",
-            mode: 'cors',
-            body: code
-        })
-        // var response = await fetch("http://127.0.0.1:5000", {
+        // var response = await fetch("https://jansm04.pythonanywhere.com", {
         //     method: "POST",
+        //     mode: 'cors',
         //     body: code
         // })
+        var response = await fetch("http://127.0.0.1:5000", {
+            method: "POST",
+            body: code
+        })
         if (response.ok) {
             var json = await response.json();
             if (!json.text) return;
@@ -68,7 +68,7 @@ const Main = () => {
                 var root = createUnpositionedTree(map, initialArg);
 
                 // make sure tree fits in canvas
-                if (root.width > window.innerWidth * 0.94) {
+                if (root.width > window.innerWidth * 0.95) {
                     setErrorMessage("Error: Too wide of a recursion tree!");
                 } else {
                     rootNode.current = root;
@@ -143,7 +143,7 @@ const Main = () => {
 
     return (
         <div>
-            <div>
+            <div className="h-[40vh] min-h-fit">
                 <Playground 
                     code={code} 
                     onCodeChange={handleCodeChange} 
@@ -156,11 +156,13 @@ const Main = () => {
                 onDecreaseSpeed={onDecreaseSpeed}
                 onIncreaseSpeed={onIncreaseSpeed}
                 handleTemplateSelect={handleTemplateSelect}
-                isLoading={loading}
-                errorMessage={errorMessage}
                 speed={speed}
             />
-            <CallInfo log={callInfo} />
+            <LogLine
+                log={callInfo}
+                isLoading={loading}
+                errorMessage={errorMessage} 
+            />
             <TreeVisualization  
                 canvasRef={canvasRef}
             />

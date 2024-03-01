@@ -9,10 +9,10 @@ const Playground = ({
 }) => {
 
     return (
-        <div className='inline-block w-[55vw] sm:w-full'>
+        <div className='inline-block w-[50vw] sm:w-full'>
             <Editor 
                 value={code}
-                height="40vh"
+                height="38vh"
                 defaultLanguage="python" 
                 onChange={onCodeChange}
                 theme='vs-dark'

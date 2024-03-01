@@ -128,7 +128,8 @@ templates.set("qsort", {
 
     return qsort(less) + equal + qsort(greater) 
 
-qsort([5, 11, 3, 7, 1, 4, 2, 9, 12, 6, 0, 8]) # make sure to call the function`
+unsorted = [5, 11, 3, 7, 1, 4, 2, 9, 12, 6, 0, 8]
+qsort(unsorted) # make sure to call the function`
 });
 
 export { templates }

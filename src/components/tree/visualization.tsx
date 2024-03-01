@@ -10,21 +10,21 @@ const TreeVisualization = ({
 
     useEffect(() => {
         if (window) {
-            setWidth(Math.round(window.innerWidth * 0.95));
+            setWidth(Math.round(window.innerWidth));
             window.onresize = () => {    
-                setWidth(Math.round(window.innerWidth * 0.95));
+                setWidth(Math.round(window.innerWidth));
             }
         }
     })
 
     return (
-        <div className="text-center">
+        <div className="flex justify-center bg-[#161616]">
             <canvas  
                 height={720}
                 width={width}
                 ref={canvasRef}
-                className="outline-none bg-[#1e1e1e] select-none"
-                >
+                className="outline-none select-none"
+            >
             </canvas> 
         </div>
         
