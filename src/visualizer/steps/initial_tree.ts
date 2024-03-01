@@ -13,7 +13,7 @@ function useRadiusAsWidth(node: Node) {
 export default function createUnpositionedTree(map: Map<string, Call>, initalArgument: string) {
     
     var memoized = new Map();
-    var rootNode;
+    var rootNode: Node = new Node("", "", false, false); // dummy
 
     function traverse(call: Call, arg: string, parent: Node | null) {
 
@@ -50,6 +50,6 @@ export default function createUnpositionedTree(map: Map<string, Call>, initalArg
 
     var root = map.get(initalArgument);
     if (root) traverse(root, initalArgument, null);
-    
+
     return rootNode;
 }

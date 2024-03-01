@@ -60,15 +60,24 @@ const Main = () => {
                 var map = toMap(json.text);
                 var keys = Array.from(map.keys());
                 var initialArg = keys[keys.length-1]; // root argument will be last key
-                isAnimating = true;
-                rootNode.current = createUnpositionedTree(map, initialArg);
-                createPositionedTree(rootNode.current);
-                var tree = await visualizeTree(canvasRef, speed, rootNode.current);
-                if (tree) {
-                    nodes = tree.nodes;
-                    edges = tree.edges;
+                var root = createUnpositionedTree(map, initialArg);
+
+                // make sure tree fits in canvas
+                if (root.width > window.innerWidth * 0.94) {
+                    setErrorMessage("Error: Too wide of a recursion tree!");
+                } else {
+                    rootNode.current = root;
+                    createPositionedTree(rootNode.current);
+
+                    // start visualization
+                    isAnimating = true;
+                    var tree = await visualizeTree(canvasRef, speed, rootNode.current);
+                    if (tree) {
+                        nodes = tree.nodes;
+                        edges = tree.edges;
+                    }
+                    isAnimating = false;
                 }
-                isAnimating = false;
             }
         } else {
             setLoading(false);
