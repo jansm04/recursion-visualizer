@@ -12,7 +12,15 @@ import Call from "../interfaces/call";
 */
 export default function toMap(responseText: string): Map<string, Call> {
     var map = new Map<string, Call>();
-    var i = 0; // start at first key
+    
+    var entryFlag = "n4jK9p1xV";
+    var n = entryFlag.length, i = n;
+
+    // skip to entry point
+    while (i < responseText.length && responseText.substring(i-n, i) != entryFlag)
+        i++;
+    i++;
+    
     while (i < responseText.length) {
 
         // extract key

@@ -28,6 +28,13 @@ def submit(code):
         response = requests.post(url, json=payload, headers=headers, params=querystring)
         responseText = json.loads(response.text)
         print(responseText)
+
+        # check if post request returns a quota message instead of a token
+        if 'message' in responseText:
+            return (False, "This site has reached the maximum daily quota for code submissions! Please try again later.")
+        if 'token' in responseText:
+            print('Recieved submission token.')
+        
     except:
         return (False, "A problem occurred while creating the code submission.")
     
