@@ -14,26 +14,26 @@ fun() # make sure you call the function`
 templates.set("fibonacci", {
     name: "Fibonacci",
     code:
-`def fun(n):
+`def fib(n):
     if n == 0 or n == 1:
         return 1
-    return fun(n - 1) + fun(n - 2)
+    return fib(n - 1) + fib(n - 2)
 
-fun(5) # make sure you call the function`
+fib(5) # make sure you call the function`
 });
 
 templates.set("fibonacci-memo", {
     name: "Fibonacci w/ Memoization",
     code:
 `memo = {}
-def fun(n):
+def fib(n):
     if n == 0 or n == 1:
         return 1
     if n not in memo:
-        memo[n] = fun(n - 1) + fun(n - 2)
+        memo[n] = fib(n - 1) + fib(n - 2)
     return memo[n]
 
-fun(5) # make sure you call the function`
+fib(5) # make sure you call the function`
 });
 
 templates.set("factorial", {
@@ -53,13 +53,13 @@ templates.set("binomial-coefficient", {
     code: 
 `# given a set of n elements, how many different  
 # subsets of k elements can we make
-def fun(n, k):
+def binco(n, k):
     if (k == 0 or n == k):
         return 1
 
-    return fun(n-1, k-1) + fun(n-1, k)
+    return binco(n-1, k-1) + binco(n-1, k)
 
-fun(5, 2) # make sure you call the function`
+binco(5, 2) # make sure you call the function`
 });
 
 templates.set("coin-change", {
@@ -68,15 +68,15 @@ templates.set("coin-change", {
 `# given a set of coins, what is the minimum 
 # number coins required to sum up to n cents
 coins = [1,2,3]
-def fun(n):
+def coin_change(n):
     if (n == 0): return 0
     if (n < 0): return float('inf')
     ans = float('inf')
     for coin in coins:
-        ans = min(ans, 1 + fun(n - coin))
+        ans = min(ans, 1 + coin_change(n - coin))
     return ans
 
-fun(4) # make sure you call the function`
+coin_change(4) # make sure you call the function`
 });
 
 templates.set("coin-change-memo", {
@@ -86,30 +86,30 @@ templates.set("coin-change-memo", {
 # number coins required to sum up to n cents
 coins = [1,2,3]
 memo = {}
-def fun(n):
+def coin_change(n):
     if (n == 0): return 0
     if (n < 0): return float('inf')
     if n not in memo:
         ans = float('inf')
         for coin in coins:
-            ans = min(ans, 1 + fun(n - coin))
+            ans = min(ans, 1 + coin_change(n - coin))
         memo[n] = ans
     return memo[n]
 
-fun(7) # make sure you call the function`
+coin_change(7) # make sure you call the function`
 })
 
 templates.set("fast-power", {
     name: "Fast Power",
     code: 
-`def fun(a, n):
+`def fast_pow(a, n):
     if (n == 0):
         return 1
     if (n % 2 == 0):
-        return fun(a*a, n/2)
-    return a * fun(a*a, (n-1)/2)
+        return fast_pow(a*a, n/2)
+    return a * fast_pow(a*a, (n-1)/2)
 
-fun(2, 5) # make sure you call the function`
+fast_pow(2, 5) # make sure you call the function`
 });
 
 templates.set("permutations", {
@@ -119,10 +119,10 @@ templates.set("permutations", {
 def permute(prev, curr): 
     if(len(curr) == 0):
         return [prev]
-    permutations = []
+    perms = []
     for i in range(len(curr)):
-        permutations += permute(prev+curr[i], curr[:i] + curr[i+1:])
-    return permutations
+        perms += permute(prev+curr[i], curr[:i] + curr[i+1:])
+    return perms
  
 permute('', 'abc') # make sure to call the function`
 })
