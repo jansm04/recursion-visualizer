@@ -37,13 +37,13 @@ const Controls = ({
                 <label className="h-fit w-fit ml-6 my-4">Pre-Built Templates:</label>
             </div>
             <div className="inline-block">
-                <select value={key} className="h-fit w-fit my-4 ml-3 xsm:ml-6 mr-6 text-gray-900" onChange={onKeyChange}>
+                <select value={key} className="h-fit w-fit my-4 ml-3 mr-6 xsm:ml-6 xsm:mt-1 text-gray-900" onChange={onKeyChange}>
                     {Array.from(templates.keys()).map((key) => (
                         <option key={key} value={key}>{templates.get(key).name}</option>
                     ))}
                 </select>
             </div>
-            <div className="inline-block">
+            <div className="inline-block sm:block">
                 <label className="h-fit w-fit ml-6 my-4 mr-3 text-gray-400">Speed:</label>
             </div>
             <div className="inline-block align-middle">

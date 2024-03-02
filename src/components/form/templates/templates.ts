@@ -112,6 +112,21 @@ templates.set("fast-power", {
 fun(2, 5) # make sure you call the function`
 });
 
+templates.set("permutations", {
+    name: "String Permutations",
+    code: 
+`# find all the permutations of a string
+def permute(prev, curr): 
+    if(len(curr) == 0):
+        return [prev]
+    permutations = []
+    for i in range(len(curr)):
+        permutations += permute(prev+curr[i], curr[:i] + curr[i+1:])
+    return permutations
+ 
+permute('', 'abc') # make sure to call the function`
+})
+
 templates.set("qsort", {
     name: "Quicksort",
     code: 

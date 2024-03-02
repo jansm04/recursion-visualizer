@@ -17,15 +17,17 @@ def transform():
     isValid, message = verification[0], verification[1]
     if isValid:
         result = sb.submit(code)
-        isAccepted, text = result[0], result[1]
+        isAccepted, text, fnName = result[0], result[1], result[2]
         obj = {
             "type": isAccepted, 
-            "text": text 
+            "text": text,
+            "functionName": fnName
         }
     else:
         obj = {
             "type": False,
-            "text": message
+            "text": message,
+            "functionName": ""
         }
     jsonObject = json.dumps(obj)
     return jsonObject

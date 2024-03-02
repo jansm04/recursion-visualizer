@@ -257,4 +257,4 @@ def setup(code):
     code = insert_globals(code, fnName, params)
     code = insert_print_line(code)
 
-    return code
+    return (code, fnName)

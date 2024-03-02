@@ -11,7 +11,8 @@ def submit(code):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
     querystring = {"fields":"*"}
     
-    code = sp.setup(code)
+    result = sp.setup(code)
+    code, fnName = result[0], result[1]
     code = code.replace("\\n", "\n")
     print(code)
     try:
@@ -31,12 +32,12 @@ def submit(code):
 
         # check if post request returns a quota message instead of a token
         if 'message' in responseText:
-            return (False, "This site has reached the maximum daily quota for code submissions! Please try again later.")
+            return (False, "This site has reached the maximum daily quota for code submissions! Please try again later.", "")
         if 'token' in responseText:
             print('Recieved submission token.')
         
     except:
-        return (False, "A problem occurred while creating the code submission.")
+        return (False, "A problem occurred while creating the code submission.", "")
     
     # wait 1 second before getting result
     time.sleep(1)
@@ -55,12 +56,12 @@ def submit(code):
 
         # if code execution exceeds time limit
         if id == 11:
-            return (False, "Time limit exceeded! Try a lower argument.")
+            return (False, "Time limit exceeded! Try a lower argument.", "")
         
         # if any other error occurred
         if id != 3:
             message = ex.extract_err_message(responseText['stderr'])
-            return (False, message)
+            return (False, message, "")
         
         outputText = responseText['stdout']
         print("Size of text: " + str(len(outputText)))
@@ -68,12 +69,12 @@ def submit(code):
 
         # if function had to be returned manually
         if 'j7Kbx9p1s' in outputText:
-            return (False, "Please don't try an infinite loop...")
+            return (False, "Please don't try an infinite loop...", "")
         
         # if function went down too many levels
         if 'h6Bv1yO2n' in outputText:
-            return (False, "Too much recursion! Try a lower argument.")
+            return (False, "Too much recursion! Try a lower argument.", "")
         
-        return (True, outputText)
+        return (True, outputText, fnName)
     except:
-        return (False, "A problem occurred while getting the code submission.")
+        return (False, "A problem occurred while getting the code submission.", "")

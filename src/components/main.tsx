@@ -27,8 +27,11 @@ const Main = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rootNode = useRef<Node>();
+    const functionName = useRef<string>("");
 
     const [code, setCode] = useState<string>(templates.get('fibonacci').code);
+    // const [functionName, setFunctionName] = useState<string>("");
+
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [callInfo, setCallInfo] = useState<string>("");
@@ -52,14 +55,14 @@ const Main = () => {
         resetVisualization();
         // send code to backend
         
-        var response = await fetch("https://jansm04.pythonanywhere.com", {
-            method: "POST",
-            body: code
-        })
-        // var response = await fetch("http://127.0.0.1:5000", {
+        // var response = await fetch("https://jansm04.pythonanywhere.com", {
         //     method: "POST",
         //     body: code
         // })
+        var response = await fetch("http://127.0.0.1:5000", {
+            method: "POST",
+            body: code
+        })
         if (response.ok) {
             var json = await response.json();
             if (!json.text) return;
@@ -67,6 +70,7 @@ const Main = () => {
             if (!json.type) {
                 setErrorMessage("Error: " + json.text);
             } else {
+                functionName.current = json.functionName;
                 var map = toMap(json.text);
                 var keys = Array.from(map.keys());
                 var initialArg = keys[keys.length-1]; // root argument will be last key
@@ -103,7 +107,7 @@ const Main = () => {
             if (selectedNode != hovered) {
                 hovered = selectedNode;
                 drawTree(canvasRef, nodes, edges, hovered);
-                setCallInfo(hovered ? `fun(${hovered.args}) returns ${hovered.rv}` : "");
+                setCallInfo(hovered ? `${functionName.current}(${hovered.args}) returns ${hovered.rv}` : "");
             }
         }
     }
