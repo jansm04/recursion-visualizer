@@ -32,10 +32,10 @@ const Controls = ({
                 </button>
             </div>
             <div className="inline-block">
-                <label className="h-fit w-fit ml-6 my-4 mr-3">Pre-Built Templates:</label>
+                <label className="h-fit w-fit ml-6 my-4">Pre-Built Templates:</label>
             </div>
             <div className="inline-block">
-                <select value={key} className="h-fit w-fit my-4 mr-6 text-gray-900" onChange={onKeyChange}>
+                <select value={key} className="h-fit w-fit my-4 ml-3 xsm:ml-6 mr-6 text-gray-900" onChange={onKeyChange}>
                     {Array.from(templates.keys()).map((key) => (
                         <option key={key} value={key}>{templates.get(key).name}</option>
                     ))}

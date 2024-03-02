@@ -17,7 +17,7 @@ const Playground = ({
                 onChange={onCodeChange}
                 theme='vs-dark'
                 options={{
-                    fontSize: 14,
+                    fontSize: 13,
                     minimap: {
                         enabled: false
                     },

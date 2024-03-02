@@ -40,21 +40,26 @@ const Main = () => {
         setCode(code);
     }
 
-    async function onRunCode() {
-        setLoading(true);  
+    function resetVisualization() {
         setErrorMessage("");
+        setCallInfo("");
+        hovered = null;
         resetCtx(canvasRef);
+    }
+
+    async function onRunCode() {
+        setLoading(true); 
+        resetVisualization();
         // send code to backend
         
-        // var response = await fetch("https://jansm04.pythonanywhere.com", {
-        //     method: "POST",
-        //     mode: 'cors',
-        //     body: code
-        // })
-        var response = await fetch("http://127.0.0.1:5000", {
+        var response = await fetch("https://jansm04.pythonanywhere.com", {
             method: "POST",
             body: code
         })
+        // var response = await fetch("http://127.0.0.1:5000", {
+        //     method: "POST",
+        //     body: code
+        // })
         if (response.ok) {
             var json = await response.json();
             if (!json.text) return;
@@ -90,7 +95,7 @@ const Main = () => {
         }
     }
 
-    function onMouseMove(e: MouseEvent) {
+    function onMouseDown(e: MouseEvent) {
         if (isAnimating) return;
         var point = computePointInCanvas(e);
         if (point) {
@@ -99,6 +104,22 @@ const Main = () => {
                 hovered = selectedNode;
                 drawTree(canvasRef, nodes, edges, hovered);
                 setCallInfo(hovered ? `fun(${hovered.args}) returns ${hovered.rv}` : "");
+            }
+        }
+    }
+
+    function onMouseMove(e: MouseEvent) {
+        if (isAnimating) return;
+        var point = computePointInCanvas(e);
+        if (point) {
+            selectedNode = selectNode(point.x, point.y);
+            if (canvasRef.current) {
+
+                // if mouse is hovering over a node
+                if (selectedNode)
+                    canvasRef.current.style.cursor = 'pointer';
+                else 
+                    canvasRef.current.style.cursor = 'auto';   
             }
         }
     }
@@ -134,10 +155,17 @@ const Main = () => {
 
     useEffect(() => {
         var canvas = canvasRef.current;
-        canvas?.addEventListener('mousemove', onMouseMove);
+        if (canvas) {
+            canvas.addEventListener('mousemove', onMouseMove);
+            canvas.addEventListener('mousedown', onMouseDown);
+        }
         return () => {
-            canvas?.removeEventListener('mousemove', onMouseMove);
+            if (canvas) {
+                canvas.removeEventListener('mousemove', onMouseMove);
+                canvas.removeEventListener('mousedown', onMouseDown);
+            }
         };
+        
     }, []);
     
 
