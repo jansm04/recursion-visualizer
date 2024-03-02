@@ -1,5 +1,7 @@
-import { ChangeEvent, RefObject, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { templates } from "./templates/templates"
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+
 
 const Controls = ({
     onRunCode,
@@ -42,20 +44,20 @@ const Controls = ({
                 </select>
             </div>
             <div className="inline-block">
-                <label className="h-fit w-fit ml-6 my-4 mr-5 italic text-gray-400">Adjust speed (1-10)</label>
+                <label className="h-fit w-fit ml-6 my-4 mr-3 text-gray-400">Speed:</label>
             </div>
-            <div className="inline-block">
-                <button className="mr-3 text-lg my-4 text-gray-300 hover:text-red-500" onClick={onDecreaseSpeed}>
-                        {'<'}{'<'}
+            <div className="inline-block align-middle">
+                <button className="mr-1 px-3 text-lg text-gray-300 rounded-xl bg-blue-700" onClick={onDecreaseSpeed}>
+                    <FaChevronDown className="h-5" />
                 </button>
             </div>
-            <div className="inline-block">
-                <button className="text-lg my-4 text-gray-300 hover:text-green-500" onClick={onIncreaseSpeed}>
-                    {'>'}{'>'}{'>'}
+            <div className="inline-block align-middle">
+                <button className="px-3 text-lg text-gray-300 rounded-xl bg-blue-900" onClick={onIncreaseSpeed}>
+                    <FaChevronUp className="h-5" />
                 </button>
             </div>
-            <div className="inline-block">
-                <label className="h-fit w-fit my-4 mx-5 px-3 py-1 text-center border border-blue-500 rounded text-white">
+            <div className="inline-block w-16">
+                <label className="h-fit my-4 ml-4 px-3 py-1 text-center border border-blue-500 rounded text-white">
                     {Math.round((1 - (speed / 1000) + 0.1) * 10)}x
                 </label>
             </div>
