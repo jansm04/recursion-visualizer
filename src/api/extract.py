@@ -18,7 +18,7 @@ def extract_fn_name(code):
         i += 1
 
     i += keyword_len
-    while i < len(code) and code[i] != '(':
+    while i < len(code) and code[i] not in ['(', ' ']:
         fnName += code[i]
         i += 1
     return fnName
