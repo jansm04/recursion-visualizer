@@ -175,7 +175,7 @@ const Main = () => {
 
     return (
         <div>
-            <div className="h-[40vh] min-h-fit">
+            <div className="h-[38vh]">
                 <Playground 
                     code={code} 
                     onCodeChange={handleCodeChange} 

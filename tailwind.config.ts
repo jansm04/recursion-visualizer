@@ -15,7 +15,7 @@ const config: Config = {
       },
     },
     screens: {
-      'sm': {'max': '800px'},
+      'sm': {'max': '1040px'},
       // => @media (max-width: 639px) { ... }
       'xsm': {'max': '400px'}
     }
