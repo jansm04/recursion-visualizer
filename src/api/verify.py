@@ -19,7 +19,7 @@ def verify(code):
         # once we exit an indent we need to verify that it was a multiple of 4 spaces
         if inIndent:
             if code[i] != ' ':
-                if indentCount % 4 != 0:
+                if indentCount % 4 != 0 and i+2 < len(code) and code[i:i+2] != '\\n':
                     return (False, "You gotta fix your indents.")
                 else:
                     indentCount = 0
