@@ -104,11 +104,15 @@ const Main = () => {
         var point = computePointInCanvas(e);
         if (point) {
             selectedNode = selectNode(point.x, point.y);
-            if (selectedNode != hovered) {
+
+            // deselect if hovered node is selected node
+            if (selectedNode == hovered)
+                hovered = null;
+            else 
                 hovered = selectedNode;
-                drawTree(canvasRef, nodes, edges, hovered);
-                setCallInfo(hovered ? `${functionName.current}(${hovered.args}) returns ${hovered.rv}` : "");
-            }
+
+            drawTree(canvasRef, nodes, edges, hovered);
+            setCallInfo(hovered ? `${functionName.current}(${hovered.args}) returns ${hovered.rv}` : "");
         }
     }
 
