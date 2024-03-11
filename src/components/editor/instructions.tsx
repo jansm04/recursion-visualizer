@@ -1,6 +1,6 @@
 const Instructions = () => {
     return (
-        <div className="inline-block w-[48vw] float-right sm:w-full p-6 bg-[#161616] h-fit min-h-[38vh] align-top">
+        <div className="inline-block w-[48vw] float-right sm:w-full p-3 pb-5 bg-[#161616] h-fit min-h-[38vh] align-top">
             <h1 className="text-gray-300 mb-1">Instructions💡</h1>
             <div className="text-gray-400 text-sm">
                 <p>&nbsp; • <span className="text-yellow-500">choose</span> a recursive function from the templates, or write your own</p>

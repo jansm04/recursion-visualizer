@@ -179,7 +179,7 @@ const Main = () => {
 
     return (
         <div>
-            <div className="h-[38vh]">
+            <div className="h-fit">
                 <Playground 
                     code={code} 
                     onCodeChange={handleCodeChange} 
