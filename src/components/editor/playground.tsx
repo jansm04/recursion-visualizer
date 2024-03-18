@@ -9,7 +9,7 @@ const Playground = ({
 }) => {
 
     return (
-        <div className='inline-block w-[49vw] sm:w-full flex-1'>
+        <div className='inline-block w-[50vw] sm:w-full flex-1'>
             <Editor 
                 value={code}
                 height="100%"

@@ -27,13 +27,15 @@ export function drawTree(canvasRef: RefObject<HTMLCanvasElement>, nodes: Node[],
     var ctx = resetCtx(canvasRef);
     if (!ctx) return;
     ctx.lineWidth = 3;
-    
+    ctx.save();
+    ctx.translate(0.5, 0.5);
     for (let i = 0; i < edges.length; i++) {
         edges[i].draw(ctx, getStrokeStyle(edges[i], hovered));
     }
     for (let i = 0; i < nodes.length; i++) {
         nodes[i].draw(ctx, getStrokeStyle(nodes[i], hovered));
     }
+    ctx.restore();
 }
 
 function getStrokeStyle(element: Node | Edge, hovered?: Node | null) {
