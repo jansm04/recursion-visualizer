@@ -178,7 +178,7 @@ const Main = () => {
     
 
     return (
-        <div>
+        <div className="overflow-hidden">
             <div className="h-fit">
                 <Playground 
                     code={code} 

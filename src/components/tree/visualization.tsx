@@ -7,10 +7,16 @@ const TreeVisualization = ({
 }) => {
 
     const [width, setWidth] = useState<number>(0);
+    const [height, setHeight] = useState<number>(720);
 
     useEffect(() => {
         if (window) {
-            setWidth(Math.round(window.innerWidth));
+            const scale = window.devicePixelRatio;
+
+            setWidth(Math.floor(window.innerWidth * scale));
+            setHeight(Math.floor(height * scale));
+
+            // handle window resizing
             window.onresize = () => {    
                 setWidth(Math.round(window.innerWidth));
             }

@@ -9,7 +9,7 @@ const Playground = ({
 }) => {
 
     return (
-        <div className='inline-block w-[50vw] sm:w-full'>
+        <div className='inline-block w-[49vw] sm:w-full'>
             <Editor 
                 value={code}
                 height="38vh"
