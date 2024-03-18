@@ -179,7 +179,7 @@ const Main = () => {
 
     return (
         <div className="overflow-hidden">
-            <div className="h-fit">
+            <div className="h-[38vh] min-h-[290px] flex sm:block align-stretch">
                 <Playground 
                     code={code} 
                     onCodeChange={handleCodeChange} 
