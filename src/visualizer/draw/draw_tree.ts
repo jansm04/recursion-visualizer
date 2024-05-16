@@ -9,6 +9,8 @@ const colourScheme = {
     hovered: "yellow"
 }
 
+const dpi = window.devicePixelRatio;
+
 export function sleep(speed: number) {
     return new Promise(resolve => setTimeout(resolve, speed));
 }
@@ -19,7 +21,7 @@ export function resetCtx(canvasRef: RefObject<HTMLCanvasElement>) {
     var ctx = canvas.getContext("2d");
     var rect = canvas.getBoundingClientRect();
     if (!ctx || !rect) return;
-    ctx.clearRect(0, 0, rect.width, rect.height);
+    ctx.clearRect(0, 0, rect.width * dpi, rect.height * dpi);
     return ctx;
 }
 
@@ -28,7 +30,7 @@ export function drawTree(canvasRef: RefObject<HTMLCanvasElement>, nodes: Node[],
     if (!ctx) return;
     ctx.lineWidth = 3;
     ctx.save();
-    ctx.translate(0.5, 0.5);
+    ctx.scale(dpi, dpi);
     for (let i = 0; i < edges.length; i++) {
         edges[i].draw(ctx, getStrokeStyle(edges[i], hovered));
     }
