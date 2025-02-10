@@ -25,8 +25,8 @@ const Controls = ({
     }
 
     return (
-        <div className="bg-[#111111] text-center sm:text-left min-h-fit">
-            <div className="my-4 inline-block">
+        <div className="bg-[#111111] text-center sm:text-left min-h-fit sm:block">
+            <div className="my-4 inline-block sm:block">
                 <button 
                     className='h-fit w-20 mx-6 text-center rounded-xl text-white bg-green-600' 
                     onClick={onRunCode}>

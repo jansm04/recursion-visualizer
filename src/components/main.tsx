@@ -179,7 +179,7 @@ const Main = () => {
 
     return (
         <div className="overflow-hidden">
-            <div className="h-[38vh] min-h-[290px] flex sm:block align-stretch">
+            <div className="h-fit flex sm:flex-col">
                 <Playground 
                     code={code} 
                     onCodeChange={handleCodeChange} 
@@ -187,21 +187,24 @@ const Main = () => {
                 <Instructions />
             </div>
             
-            <Controls 
-                onRunCode={onRunCode} 
-                onDecreaseSpeed={onDecreaseSpeed}
-                onIncreaseSpeed={onIncreaseSpeed}
-                handleTemplateSelect={handleTemplateSelect}
-                speed={speed}
-            />
-            <LogLine
-                log={callInfo}
-                isLoading={loading}
-                errorMessage={errorMessage} 
-            />
-            <TreeVisualization  
-                canvasRef={canvasRef}
-            />
+            <div className="">
+                <Controls 
+                    onRunCode={onRunCode} 
+                    onDecreaseSpeed={onDecreaseSpeed}
+                    onIncreaseSpeed={onIncreaseSpeed}
+                    handleTemplateSelect={handleTemplateSelect}
+                    speed={speed}
+                />
+                <LogLine
+                    log={callInfo}
+                    isLoading={loading}
+                    errorMessage={errorMessage} 
+                />
+                <TreeVisualization  
+                    canvasRef={canvasRef}
+                />
+            </div>
+            
         </div>
     )
 }
